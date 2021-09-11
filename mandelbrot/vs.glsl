@@ -16,7 +16,6 @@ uniform int WIDTH;
 uniform float unitRe;
 uniform float unitIm;
 
-
 //uniform mat4 cMatrix;
 
 void main() {

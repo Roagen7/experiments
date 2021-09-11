@@ -9,7 +9,9 @@ out vec4 FragColor;
 
 
 uniform int ITERS;
+uniform int SET; //0 -- mandelbrot, 1 -- julia
 
+uniform vec2 c;
 
 vec3 coln(int n){
     float colCoord = 1 - float(n) / float(ITERS);
@@ -17,7 +19,7 @@ vec3 coln(int n){
 
 
     return vec3(1,colCoord,colCoord);
-
+//    return vec3(1.0, 1.0, 1.0);
 
 }
 
@@ -43,7 +45,7 @@ vec3 mandel(vec2 z){
 }
 
 
-vec3 julia(vec2 z, vec2 c){
+vec3 julia(vec2 z){
     vec2 m = z;
 
 
@@ -63,7 +65,14 @@ vec3 julia(vec2 z, vec2 c){
 
 void main() {
 //    vec3 cv = mandel(Complex);
-    vec3 cv = julia(Complex, vec2(-0.8,0.156));
+    vec3 cv = vec3(0.0,0.0,0.0);
+    if(SET == 0){
+        cv = mandel(Complex);
+    } else if(SET == 1){
+        cv = julia(Complex);
+    }
+
+
 //    FragColor = (mandel(Complex),1.0);
 //    FragColor = (ITERS,ITERS,ITERS,1.0);
     FragColor = vec4(cv.x, cv.y, cv.z, 1.0);

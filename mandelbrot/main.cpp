@@ -17,13 +17,18 @@
 //}
 
 
+
 const int width = 1920;
 const int height = 1080;
 
-const int ITERS = 500;
+const int ITERS = 256;
+const int SET = 1; // 0 - mandelbrot 1 - julia
+
  std::complex<float>Z_0 = {-1.5,1.0};
+std::complex<float> C = {-0.8f, 0.156f};
  float UNIT_RE = 2.0f;
  float UNIT_IM = 2.0f;
+
 
 
 
@@ -56,6 +61,7 @@ void mandelbrot::gl_main() {
     glUniform1i(glGetUniformLocation(shaderProgram,"ITERS"), ITERS);
     glUniform1i(glGetUniformLocation(shaderProgram,"HEIGHT"), height);
     glUniform1i(glGetUniformLocation(shaderProgram,"WIDTH"), width);
+    glUniform1i(glGetUniformLocation(shaderProgram, "SET"), SET);
 
 
     // END DATA
@@ -65,7 +71,12 @@ void mandelbrot::gl_main() {
 
 
     //DRAWING
+    float th = 0;
+
     while(!glfwWindowShouldClose(window)){
+
+        C = 0.7885f * eix(th);
+        th += 0.01;
 
         glfwPollEvents();
             getEvents(window);
@@ -75,6 +86,7 @@ void mandelbrot::gl_main() {
         glUseProgram(shaderProgram);
 
         glUniform2f(glGetUniformLocation(shaderProgram, "z0"), Z_0.real(), Z_0.imag());
+        glUniform2f(glGetUniformLocation(shaderProgram, "c"), C.real(),C.imag());
         glUniform1f(glGetUniformLocation(shaderProgram,"unitRe"), UNIT_RE);
         glUniform1f(glGetUniformLocation(shaderProgram,"unitIm"), UNIT_IM);
 
@@ -130,6 +142,10 @@ void mandelbrot::getEvents(GLFWwindow *window) {
         UNIT_IM = 1.1f * UNIT_IM;
     }
 
+}
+
+std::complex<float> mandelbrot::eix(float x){
+    return {cosf(x), sinf(x)};
 }
 
 
