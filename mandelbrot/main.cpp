@@ -4,9 +4,7 @@
 
 #include "main.h"
 
-//std::complex<float> pixIntoComplex(glm::vec2 pixel,std::complex<float> z0, float unitRe, float unitIm){
-//    return z0 + std::complex((float) pixel.x * unitRe/ width, (float) -(pixel.y * unitIm/height));
-//}
+
 //
 //
 //
@@ -52,7 +50,7 @@ void mandelbrot::gl_main() {
 
 
     GLuint shaderProgram;
-    createShader("../vs.glsl","../fs.glsl",shaderProgram);
+    createShader("../mandelbrot/vs.glsl","../mandelbrot/fs.glsl",shaderProgram);
 
     glUseProgram(shaderProgram);
     glUniform1i(glGetUniformLocation(shaderProgram,"ITERS"), ITERS);
@@ -87,6 +85,10 @@ void mandelbrot::gl_main() {
     glDeleteShader(shaderProgram);
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+std::complex<float> pixToComplex(glm::vec2 pixel,std::complex<float> z0, float unitRe, float unitIm){
+    return z0 + std::complex((float) pixel.x * unitRe/ width, (float) -(pixel.y * unitIm/height));
 }
 
 

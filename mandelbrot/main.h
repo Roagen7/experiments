@@ -21,6 +21,7 @@ namespace mandelbrot {
 
     void gl_main();
     void getEvents(GLFWwindow* window);
+    void pixToComplex(glm::vec2 pixel,std::complex<float> z0, float unitRe, float unitIm);
 }
 
 
