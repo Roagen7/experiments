@@ -5,11 +5,19 @@ in vec3 Color;
 out vec4 FragColor;
 
 uniform int AREA;
+uniform mat4 rotationMatrix;
 
 
 float interpolate(float a0, float a1, float w){
     return (a1 - a0) * ((w * (w * 6.0 - 15.0) + 10.0) * w * w * w) + a0;
 }
+
+vec2 transformVec(vec2 v, mat4 m){
+    vec4 vHomographic = vec4(v,1.0,1.0) * m;
+
+    return vec2(vHomographic.x, vHomographic.y);
+}
+
 
 vec2 randomGradient(int ix, int iy) {
     // No precomputed gradients mean this works for any number of grid coordinates
@@ -35,6 +43,7 @@ float dotGradient(float ix, float iy, float x, float y){
     float dy = y - iy;
 
     vec2 gradient = randomGradient(int(ix),int(iy));
+    gradient = transformVec(gradient,rotationMatrix);
     return gradient.x * dx + gradient.y * dy;
 //    return dot(vec2(dx,dy), vec2(vecx[int(ix)],vecy[int(iy)]));
 }

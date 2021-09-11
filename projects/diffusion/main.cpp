@@ -10,7 +10,7 @@
 const int width = 1920;
 const int height = 1080;
 
-const int AREA = 32;
+const int AREA = 128;
 
 
 void diffusion::gl_main() {
@@ -23,19 +23,14 @@ void diffusion::gl_main() {
 
     for(int x = 0; x < width; x++){
         for(int y =  0; y < height; y++){
-
-//            std::cout << floor(x / 1920.0 * AREA) << " " << floor(y / 1080.0 * AREA) << std::endl;
             points.push_back(x);
             points.push_back(y);
-
 
             points.push_back(1.0f);
             points.push_back(1.0f);
             points.push_back(1.0f);
         }
     }
-
-//    cells[500][500].a = 1.0f;
 
 
     GLuint shaderProgram;
@@ -52,8 +47,8 @@ void diffusion::gl_main() {
     float th = 0;
     while(!glfwWindowShouldClose(window)){
 
-
-        th += 0.01;
+        glm::mat4 m = glm::rotate(glm::mat4(1.f),th, {0,0,1.0});
+        th += 0.05;
 
         glfwPollEvents();
 
@@ -61,6 +56,7 @@ void diffusion::gl_main() {
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"rotationMatrix"),1,GL_FALSE, glm::value_ptr(m));
 
         glBindVertexArray(VAO);
         glPointSize((float) 2.0);
