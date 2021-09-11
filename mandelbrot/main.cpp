@@ -21,9 +21,9 @@ const int width = 1920;
 const int height = 1080;
 
 const int ITERS = 100;
-const std::complex<float>Z_0 = {-1.5,1.0};
-const float UNIT_RE = 2.0f;
-const float UNIT_IM = 2.0f;
+ std::complex<float>Z_0 = {-1.5,1.0};
+ float UNIT_RE = 2.0f;
+ float UNIT_IM = 2.0f;
 
 
 
@@ -56,9 +56,8 @@ void mandelbrot::gl_main() {
     glUniform1i(glGetUniformLocation(shaderProgram,"ITERS"), ITERS);
     glUniform1i(glGetUniformLocation(shaderProgram,"HEIGHT"), height);
     glUniform1i(glGetUniformLocation(shaderProgram,"WIDTH"), width);
-    glUniform1f(glGetUniformLocation(shaderProgram,"unitRe"), UNIT_RE);
-    glUniform1f(glGetUniformLocation(shaderProgram,"unitIm"), UNIT_IM);
-    glUniform2f(glGetUniformLocation(shaderProgram, "z0"), Z_0.real(), Z_0.imag());
+
+
     // END DATA
 //    glUseProgram(shaderProgram);
     GLuint VAO;
@@ -69,11 +68,16 @@ void mandelbrot::gl_main() {
     while(!glfwWindowShouldClose(window)){
 
         glfwPollEvents();
-//            getEvents(window);
+            getEvents(window);
 
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
+
+        glUniform2f(glGetUniformLocation(shaderProgram, "z0"), Z_0.real(), Z_0.imag());
+        glUniform1f(glGetUniformLocation(shaderProgram,"unitRe"), UNIT_RE);
+        glUniform1f(glGetUniformLocation(shaderProgram,"unitIm"), UNIT_IM);
+
         glBindVertexArray(VAO);
         glPointSize(2.0);
         glDrawArrays(GL_POINTS, 0 , points.size());
@@ -87,12 +91,44 @@ void mandelbrot::gl_main() {
     glfwTerminate();
 }
 
-std::complex<float> pixToComplex(glm::vec2 pixel,std::complex<float> z0, float unitRe, float unitIm){
+std::complex<float> mandelbrot::pixToComplex(glm::vec2 pixel,std::complex<float> z0, float unitRe, float unitIm){
     return z0 + std::complex((float) pixel.x * unitRe/ width, (float) -(pixel.y * unitIm/height));
 }
 
 
 void mandelbrot::getEvents(GLFWwindow *window) {
+    double xPos, yPos;
+    glfwGetCursorPos(window, &xPos, &yPos);
+    if(glfwGetMouseButton(window,GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+
+//        auto zi = pixToComplex({xPos,yPos}, Z_0, UNIT_RE, UNIT_IM);
+//        if(zi != Z_0){
+//            Z_0 = zi;
+//        }
+    }
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
+        Z_0 = Z_0 + std::complex(0.0f,(float)UNIT_IM / height * 3 );
+
+    }
+    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
+        Z_0 = Z_0 + std::complex(0.0f,-(float)UNIT_IM / height * 3 );
+    }
+    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
+        Z_0 = Z_0 + std::complex((float)UNIT_RE / height * 3,0.0f );
+    }
+    if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
+        Z_0 = Z_0 + std::complex(-(float)UNIT_RE / height * 3,0.0f );
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
+        UNIT_RE = 0.9f * UNIT_RE;
+        UNIT_IM = 0.9f * UNIT_IM;
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){
+        UNIT_RE = 1.1f * UNIT_RE;
+        UNIT_IM = 1.1f * UNIT_IM;
+    }
 
 }
 

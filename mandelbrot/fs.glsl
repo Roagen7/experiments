@@ -16,7 +16,7 @@ vec3 coln(int n){
 
 
 
-    return vec3(colCoord,colCoord,colCoord);
+    return vec3(colCoord,colCoord,1);
 
 
 }
@@ -62,8 +62,8 @@ vec3 julia(vec2 z, vec2 c){
 
 
 void main() {
-//    vec3 cv = mandel(Complex);
-    vec3 cv = julia(Complex, vec2(0.1,0.65));
+    vec3 cv = mandel(Complex);
+//    vec3 cv = julia(Complex, vec2(0.1,0.65));
 //    FragColor = (mandel(Complex),1.0);
 //    FragColor = (ITERS,ITERS,ITERS,1.0);
     FragColor = vec4(cv.x, cv.y, cv.z, 1.0);
