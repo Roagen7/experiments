@@ -1,3 +1,3 @@
 my visualizations with OpenGL
 
-[Mandelbrot/Julia set visualization](mandelbrot/README.md)
+[Mandelbrot/Julia set visualization](projects/mandelbrot/README.md)

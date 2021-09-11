@@ -15,10 +15,16 @@ uniform vec2 c;
 
 vec3 coln(int n){
     float colCoord = 1 - float(n) / float(ITERS);
+//    float colCoord = float(n) / float(ITERS);
 
 
+//    return vec3(
+//    sin(colCoord + 1.63),
+//    sin(colCoord + 0.82),
+//    sin(colCoord * 0.7)
+//    );
 
-    return vec3(1,colCoord,colCoord);
+    return vec3(colCoord,1,colCoord);
 //    return vec3(1.0, 1.0, 1.0);
 
 }
