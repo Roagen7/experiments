@@ -18,5 +18,7 @@ void main() {
     Position = pos;
 
     Color = col;
-    gl_Position = vec4(vec2(pos.x / (WIDTH/2) - 1, -(pos.y / (HEIGHT/2) - 1)),0.0, 1.0);
+    vec2 posv2 = vec2(pos.x / (WIDTH/2) - 1, -(pos.y / (HEIGHT/2) - 1));
+
+    gl_Position = vec4(posv2.x, posv2.y,0.0, 1.0);
 }
