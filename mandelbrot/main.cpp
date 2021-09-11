@@ -83,7 +83,10 @@ void mandelbrot::gl_main() {
         glfwSwapBuffers(window);
 
     }
-
+    glDeleteBuffers(1,&VAO);
+    glDeleteShader(shaderProgram);
+    glfwDestroyWindow(window);
+    glfwTerminate();
 }
 
 
