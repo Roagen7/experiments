@@ -20,7 +20,7 @@
 const int width = 1920;
 const int height = 1080;
 
-const int ITERS = 100;
+const int ITERS = 500;
  std::complex<float>Z_0 = {-1.5,1.0};
  float UNIT_RE = 2.0f;
  float UNIT_IM = 2.0f;
@@ -79,7 +79,7 @@ void mandelbrot::gl_main() {
         glUniform1f(glGetUniformLocation(shaderProgram,"unitIm"), UNIT_IM);
 
         glBindVertexArray(VAO);
-        glPointSize(2.0);
+        glPointSize(1.0);
         glDrawArrays(GL_POINTS, 0 , points.size());
 
         glfwSwapBuffers(window);
@@ -100,7 +100,7 @@ void mandelbrot::getEvents(GLFWwindow *window) {
     double xPos, yPos;
     glfwGetCursorPos(window, &xPos, &yPos);
     if(glfwGetMouseButton(window,GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
-
+        std::cout << pixToComplex({xPos,yPos}, Z_0, UNIT_RE, UNIT_IM) << std::endl;
 //        auto zi = pixToComplex({xPos,yPos}, Z_0, UNIT_RE, UNIT_IM);
 //        if(zi != Z_0){
 //            Z_0 = zi;
