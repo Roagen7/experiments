@@ -14,12 +14,9 @@ uniform int WIDTH;
 uniform int HEIGHT;
 
 
-//uniform mat4 cMatrix;
-
 void main() {
-    Position = vec2(pos.x / (WIDTH/2) - 1, -(pos.y / (HEIGHT/2) - 1));
-
+    Position = pos;
 
     Color = col;
-    gl_Position = vec4(Position,0.0, 1.0);
+    gl_Position = vec4(vec2(pos.x / (WIDTH/2) - 1, -(pos.y / (HEIGHT/2) - 1)),0.0, 1.0);
 }

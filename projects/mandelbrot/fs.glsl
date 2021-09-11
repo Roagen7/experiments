@@ -15,18 +15,7 @@ uniform vec2 c;
 
 vec3 coln(int n){
     float colCoord = 1 - float(n) / float(ITERS);
-//    float colCoord = float(n) / float(ITERS);
-
-
-//    return vec3(
-//    sin(colCoord + 1.63),
-//    sin(colCoord + 0.82),
-//    sin(colCoord * 0.7)
-//    );
-
-    return vec3(colCoord,1,colCoord);
-//    return vec3(1.0, 1.0, 1.0);
-
+    return vec3(colCoord,colCoord,1);
 }
 
 
@@ -41,7 +30,7 @@ vec3 mandel(vec2 z){
     for(int i  = 0; i < ITERS; i++){
         m = multiplyComplex(m,m) + z;
         float modulusSq = m.x * m.x + m.y * m.y;
-        if(modulusSq >= 4){
+        if(modulusSq > 4){
             return coln(i);
         }
     }

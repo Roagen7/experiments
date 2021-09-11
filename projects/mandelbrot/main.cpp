@@ -8,8 +8,8 @@
 const int width = 1920;
 const int height = 1080;
 
-const int ITERS = 256;
-const int SET = 0; // 0 - mandelbrot 1 - julia
+const int ITERS = 100;
+const int SET = 1; // 0 - mandelbrot 1 - julia
 
  std::complex<float>Z_0 = {-1.5,1.0};
 std::complex<float> C = {-0.8f, 0.156f};
@@ -57,7 +57,7 @@ void mandelbrot::gl_main() {
     while(!glfwWindowShouldClose(window)){
 
 //        C = 0.7885f * eix(th);
-        th += 0.01;
+//        th += 0.01;
 
         glfwPollEvents();
             getEvents(window);

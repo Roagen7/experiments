@@ -16,10 +16,13 @@
 #include "../../functions/functions.h"
 
 namespace diffusion {
+
+
+
     void gl_main();
+
     void getEvents(GLFWwindow* window);
-    std::complex<float> eix(float x);
-    std::complex<float> pixToComplex(glm::vec2 pixel,std::complex<float> z0, float unitRe, float unitIm);
+
 };
 
 
