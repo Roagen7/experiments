@@ -20,7 +20,7 @@ void camera::init(int w, int h, glm::vec3 p, glm::vec3 d) {
     pos = p;
     dir = d;
 
-    speed = 0.1f;
+    speed = 0.5f;
     sens = 100.0f;
 
 }
@@ -30,7 +30,7 @@ glm::mat4 camera::view(){
     auto proj = glm::mat4(1.0f);
 
     vx = glm::lookAt(camera::pos, camera::pos + camera::dir, camera::UP);
-    proj = glm::perspective(glm::radians(45.0f), (float) camera::camW/ camera::camH, 0.1f, 100.0f);
+    proj = glm::perspective(glm::radians(90.0f), (float) camera::camW/ camera::camH, 0.1f, 100.0f);
 
     return proj * vx;
 }
