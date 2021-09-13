@@ -42,9 +42,10 @@ enum DIR  {
 struct voxel {
     glm::vec3 pos;
     glm::vec3 color;
+    float side;
     GLuint VAO;
 
-    voxel(glm::vec3 pos, glm::vec3 color);
+    voxel(glm::vec3 pos, glm::vec3 color, float sideLength = 1);
     ~voxel();
     void draw(GLuint shaderProgram, glm::mat4 cameraView);
 

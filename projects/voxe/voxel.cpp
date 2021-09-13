@@ -5,18 +5,19 @@
 #include "voxel.h"
 #include "../../functions/functions.h"
 
-voxel::voxel(glm::vec3 pos, glm::vec3 color) {
+voxel::voxel(glm::vec3 pos, glm::vec3 color, float sideLength) {
     
     bindDataVec3(cube,VAO);
     this->pos = pos;
     this->color = color;
+    this->side = sideLength;
 }
 
 void voxel::draw(GLuint shaderProgram, glm::mat4 cameraView) {
     auto mx  = glm::mat4(1.0f);
     mx = glm::translate(mx, voxel::pos);
 //        auto proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
-
+    mx = glm::scale(mx,{side,side,side});
     glUseProgram(shaderProgram);
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"camMatrix"), 1, GL_FALSE, glm::value_ptr(cameraView * mx));
 //    glUniformMatrix3fv(glGetUniformLocation(shaderProgram,"color"),color.x, color.y, color.z);
