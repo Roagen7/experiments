@@ -10,7 +10,7 @@
 const int width = 1920;
 const int height = 1080;
 
-const int AREA = 128;
+const int AREA = 64;
 
 
 void diffusion::gl_main() {

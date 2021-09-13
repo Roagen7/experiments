@@ -8,7 +8,7 @@ find_package(glfw3 3.3 REQUIRED)
 
 add_subdirectory(include/glad/)
 add_subdirectory(include/glm/)
-add_executable(untitled5 main.cpp functions/functions.cpp functions/functions.h projects/mandelbrot/main.cpp projects/mandelbrot/main.h projects/diffusion/main.cpp projects/diffusion/main.h)
+add_executable(untitled5 main.cpp functions/functions.cpp functions/functions.h projects/mandelbrot/main.cpp projects/mandelbrot/main.h projects/diffusion/main.cpp projects/diffusion/main.h projects/voxe/main.h projects/voxe/main.cpp functions/camera.h functions/camera.cpp)
 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)

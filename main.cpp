@@ -1,8 +1,8 @@
 #include "projects/diffusion/main.h"
 #include "projects/mandelbrot/main.h"
-
+#include "projects/voxe/main.h"
 
 int main() {
-    diffusion::gl_main();
+    voxe::gl_main();
     return 0;
 }
