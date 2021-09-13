@@ -19,7 +19,7 @@
 namespace voxe {
     void gl_main();
 
-    void bindDataVec3(std::vector<GLfloat> points, GLuint& VAO);
+
 
 }
 

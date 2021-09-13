@@ -18,6 +18,7 @@ void getShaderErrors(GLuint shader, std::string type);
 
 void createShader(std::string vertexFile, std::string fragmentFile, GLuint& shaderProgram);
 void bindData(std::vector<GLfloat> points, GLuint& VAO);
+void bindDataVec3(std::vector<GLfloat> points, GLuint& VAO);
 
 std::string get_file_contents(const char* filename);
 
