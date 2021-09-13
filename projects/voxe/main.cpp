@@ -18,7 +18,7 @@ unsigned SEED_C = rand();
 // x in [0,1)
 
 void generateTerrain(std::vector<voxel>& voxels){
-    const int W = 100;
+    const int W = 150;
     const int H = 100;
     voxels.reserve(W * H);
 
@@ -98,7 +98,7 @@ void voxe::gl_main() {
     GLFWwindow* window;
     createWindow(window,width, height);
     glEnable(GL_DEPTH_TEST);
-   glScissor(0,0,width,height);
+    glEnable(GL_DEPTH_CLAMP);
 //    glEnable(GL_CULL_FACE_MODE);
 //    glCullFace(GL_FRONT_AND_BACK);
 //    glFrontFace(GL_CW);

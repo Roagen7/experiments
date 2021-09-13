@@ -23,7 +23,9 @@ void voxel::draw(glm::mat4 cameraView, bool externalShader, GLuint shaderProgram
         glUseProgram(shaderProgram);
     }
 
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"camMatrix"), 1, GL_FALSE, glm::value_ptr(cameraView * mx));
+
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"modelMatrix"), 1, GL_FALSE, glm::value_ptr( mx));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"camMatrix"), 1, GL_FALSE, glm::value_ptr(cameraView));
 //    glUniformMatrix3fv(glGetUniformLocation(shaderProgram,"color"),color.x, color.y, color.z);
 
     glUniform3f(glGetUniformLocation(shaderProgram,"color"),color.x, color.y, color.z);
