@@ -23,6 +23,7 @@ void voxe::gl_main() {
     camera::init(width,height,{0.0,0.0,0.0},{0.0,0.0,-1.0});
 
 
+
 //    glUseProgram(shaderProgram);
 
 
@@ -53,16 +54,17 @@ void voxe::gl_main() {
 
 
         glfwPollEvents();
+        camera::input(window);
+
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         auto mx  = glm::mat4(1.0f);
         mx = glm::translate(mx, {0.0f, -0.5f, -10.0f}) * glm::rotate(mx, th, {0.0,1.0,1.0});
-        auto proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
-
+//        auto proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
         glUseProgram(shaderProgram);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"camMatrix"), 1, GL_FALSE, glm::value_ptr(proj * mx));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"camMatrix"), 1, GL_FALSE, glm::value_ptr(camera::view() * mx));
 
 
         glBindVertexArray(VAO);
