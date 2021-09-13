@@ -5,7 +5,6 @@ layout (location = 1) in vec3 norm;
 
 uniform mat4 camMatrix;
 
-
 void main() {
     gl_Position = camMatrix * vec4(pos,1.0);
 

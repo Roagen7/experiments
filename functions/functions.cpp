@@ -70,14 +70,14 @@ void getShaderErrors(GLuint shader, std::string type){
     if(type == "PROGRAM"){
         std::cout << "SHADER_LINKING_ERROR::" << type << "\n" << std::endl;
 
-    } else if (type == "VERTEX" || type == "FRAGMENT"){
+    } else if (type == "VERTEX" || type == "FRAGMENT" || type == "GEOMETRY"){
         std::cout << "SHADER_COMPILATION_ERROR::" << type << "\n" << std::endl;
     }
 }
 
 
 
-void createShader(std::string vertexFile, std::string fragmentFile, GLuint& shaderProgram){
+void createShader(std::string vertexFile, std::string fragmentFile, GLuint& shaderProgram,  bool hasGeometryShader, std::string geometryFile){
     GLuint vertexShader, fragmentShader;
     std::string vertexSource = get_file_contents(vertexFile.c_str());
     std::string fragmentSource = get_file_contents(fragmentFile.c_str());
@@ -96,6 +96,18 @@ void createShader(std::string vertexFile, std::string fragmentFile, GLuint& shad
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
+
+    if(hasGeometryShader){
+        std::string geometrySource = get_file_contents(geometryFile.c_str());
+        const char* gs = geometrySource.c_str();
+        GLuint geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geometryShader, 1, &gs, nullptr);
+        glCompileShader(geometryShader);
+        getShaderErrors(geometryShader, "GEOMETRY");
+        glAttachShader(shaderProgram, geometryShader);
+    }
+
+
     glLinkProgram(shaderProgram);
     getShaderErrors(shaderProgram, "PROGRAM");
 

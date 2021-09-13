@@ -47,7 +47,7 @@ struct voxel {
 
     voxel(glm::vec3 pos, glm::vec3 color, float sideLength = 1);
     ~voxel();
-    void draw(GLuint shaderProgram, glm::mat4 cameraView);
+    void draw(glm::mat4 cameraView, bool externalShader = false, GLuint shaderProgram = 0);
 
     glm::vec3 locate(DIR offset);
 

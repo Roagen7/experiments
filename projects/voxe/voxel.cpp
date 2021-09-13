@@ -13,12 +13,16 @@ voxel::voxel(glm::vec3 pos, glm::vec3 color, float sideLength) {
     this->side = sideLength;
 }
 
-void voxel::draw(GLuint shaderProgram, glm::mat4 cameraView) {
+void voxel::draw(glm::mat4 cameraView, bool externalShader, GLuint shaderProgram) {
     auto mx  = glm::mat4(1.0f);
     mx = glm::translate(mx, voxel::pos);
 //        auto proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
     mx = glm::scale(mx,{side,side,side});
-    glUseProgram(shaderProgram);
+
+    if(externalShader){
+        glUseProgram(shaderProgram);
+    }
+
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"camMatrix"), 1, GL_FALSE, glm::value_ptr(cameraView * mx));
 //    glUniformMatrix3fv(glGetUniformLocation(shaderProgram,"color"),color.x, color.y, color.z);
 
