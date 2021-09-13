@@ -6,7 +6,7 @@
 #include "../../functions/functions.h"
 
 voxel::voxel(glm::vec3 pos, glm::vec3 color) {
-
+    
     bindDataVec3(cube,VAO);
     this->pos = pos;
     this->color = color;
