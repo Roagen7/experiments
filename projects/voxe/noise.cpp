@@ -85,3 +85,75 @@ float perlin(float x, float y, int AREA, unsigned SEED_A, unsigned SEED_B, unsig
     return (value + 1.0f)/ 2.0f;
 }
 
+glm::vec3 randomGradient3D(int ix, int iy,int iz) {
+    float PHI = 2.2323;
+    float COSTHETA = -0.54;
+
+    float theta = acos(COSTHETA);
+
+    return {
+        sin(theta) * cos(PHI),
+        sin(theta) * sin(PHI),
+        cos(theta) * cos(PHI)
+    };
+
+}
+
+
+float dotGridGradient3D(int ix, int iy, int iz,float x, float y, float z){
+    glm::vec3 gradient = randomGradient3D(ix, iy,iz);
+
+    // Compute the distance vector
+    float dx = x - (float)ix;
+    float dy = y - (float)iy;
+    float dz = y - (float)iz;
+    // Compute the dot-product
+    return (dx*gradient.x + dy*gradient.y + dz * gradient.z);
+}
+
+
+
+float perlin3D(float x,float y, float z, int AREA){
+
+    // 0 - AREA
+
+    x = (float) x / AREA;
+    y = (float) y / AREA;
+    z = (float) z / AREA;
+
+    int x0 = (int)x;
+    int x1 = x0 + 1;
+    int y0 = (int)y;
+    int y1 = y0 + 1;
+    int z0 = (int)z;
+    int z1 = z0 + 1;
+
+    float sx = x - (float)x0;
+    float sy = y - (float)y0;
+    float sz = z - (float)z0;
+
+    float n0, n1,ix0, ix1,ix2,ix3, iy0, iy1,value;
+
+    n0 = dotGridGradient3D(x0,y0,z0, x, y, z);
+    n1 = dotGridGradient3D(x1,y0,z0,x,y,z);
+    ix0 = interpolate(n0,n1,sx);
+    n0 = dotGridGradient3D(x0,y1,z0,x,y,z);
+    n1 = dotGridGradient3D(x1,y1,z0,x,y,z);
+    ix1 = interpolate(n0,n1,sx);
+
+    n0 = dotGridGradient3D(x0,y0,z1,x,y,z);
+    n1 = dotGridGradient3D(x1,y0,z1,x,y,z);
+    ix2 = interpolate(n0,n1,sx);
+    n0 = dotGridGradient3D(x1,y0,z1,x,y,z);
+    n1 = dotGridGradient3D(x1,y1,z1,x,y,z);
+    ix3 = interpolate(n0,n1,sx);
+
+    iy0 = interpolate(ix0,ix1,sy);
+    iy1 = interpolate(ix2,ix3,sy);
+
+    value = interpolate(iy0,iy1,sz);
+
+    return  (value + 1.0f)/ 2.0f;
+
+
+}

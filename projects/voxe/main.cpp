@@ -10,7 +10,7 @@ const int width = 1920;
 const int height = 1080;
 
 
-const int AREA = 16;
+const int AREA = 20;
 unsigned SEED_A = rand();
 unsigned SEED_B = rand();
 unsigned SEED_C = rand();
@@ -86,7 +86,20 @@ void generateMengerSponge(std::vector<voxel> &voxels, int iters = 3, float sideL
     generateMengerSponge(voxels, iters - 1,
                          sideLen / 3, start0 + glm::vec3(2 * sideLen / 3, 2 * sideLen / 3, sideLen / 3));
 }
+void generateCaves(std::vector<voxel>& voxels){
+    for(int x = 0; x < 25; x++){
+        for(int y = 0; y < 25; y++){
+            for(int z = 0; z < 25; z++){
+                float noise = perlin3D(x,y,z, AREA);
+                if(noise > 0.6){
+                    voxels.emplace_back(glm::vec3( x,- y, z), glm::vec3(noise, noise, noise));
+                }
+            }
+        }
+    }
 
+
+}
 
 void voxe::gl_main() {
     srand(time(nullptr));
@@ -103,6 +116,14 @@ void voxe::gl_main() {
 //    glCullFace(GL_FRONT_AND_BACK);
 //    glFrontFace(GL_CW);
 
+//    for(int i = 0; i < cube.size(); i+=9){
+//        glm::vec3 v0(cube[i],cube[i+1],cube[i+2]);
+//        glm::vec3 v1(cube[i+3],cube[i+4],cube[i+5]);
+//        glm::vec3 v2(cube[i+6],cube[i+7],cube[i+8]);
+//
+//    }
+
+
     GLuint shaderProgram;
     createShader("../projects/voxe/vs.glsl","../projects/voxe/fs.glsl", shaderProgram, true, "../projects/voxe/gs.glsl");
 
@@ -111,7 +132,7 @@ void voxe::gl_main() {
 
 
     std::vector<voxel> voxels;
-    generateTerrain(voxels);
+    generateCaves(voxels);
 //    generateMengerSponge(voxels, 3, 18);
 
 
@@ -135,12 +156,12 @@ void voxe::gl_main() {
 //        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         for(auto& vox : voxels){
+//
+
             vox.draw(camera::view(), true, shaderProgram);
+
         }
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//        for(auto& vox : voxels){
-//            vox.draw(shaderProgram, camera::view());
-//        }
+
         glfwSwapBuffers(window);
     }
 

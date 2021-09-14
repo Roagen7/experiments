@@ -14,17 +14,14 @@ voxel::voxel(glm::vec3 pos, glm::vec3 color, float sideLength) {
 }
 
 void voxel::draw(glm::mat4 cameraView, bool externalShader, GLuint shaderProgram) {
-    auto mx  = glm::mat4(1.0f);
-    mx = glm::translate(mx, voxel::pos);
-//        auto proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
-    mx = glm::scale(mx,{side,side,side});
+    calcModelMatrix();
 
     if(externalShader){
         glUseProgram(shaderProgram);
     }
 
 
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"modelMatrix"), 1, GL_FALSE, glm::value_ptr( mx));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"modelMatrix"), 1, GL_FALSE, glm::value_ptr( this->modelMatrix));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"camMatrix"), 1, GL_FALSE, glm::value_ptr(cameraView));
 //    glUniformMatrix3fv(glGetUniformLocation(shaderProgram,"color"),color.x, color.y, color.z);
 
@@ -56,5 +53,12 @@ glm::vec3 voxel::locate(DIR offset) {
 
 voxel::~voxel() {
     glDeleteVertexArrays(1,&VAO);
+}
+
+void voxel::calcModelMatrix() {
+    auto mx  = glm::mat4(1.0f);
+    mx = glm::translate(mx, voxel::pos);
+    mx = glm::scale(mx,{side,side,side});
+    this->modelMatrix = mx;
 }
 

@@ -42,11 +42,14 @@ enum DIR  {
 struct voxel {
     glm::vec3 pos;
     glm::vec3 color;
+    glm::mat4 modelMatrix;
     float side;
     GLuint VAO;
 
+
     voxel(glm::vec3 pos, glm::vec3 color, float sideLength = 1);
     ~voxel();
+    void calcModelMatrix();
     void draw(glm::mat4 cameraView, bool externalShader = false, GLuint shaderProgram = 0);
 
     glm::vec3 locate(DIR offset);

@@ -13,7 +13,8 @@ uniform mat4 camMatrix;
 bool in_frustum(mat4 M, vec3 p) {
     vec4 Pclip = M * vec4(p, 1.0);
 
-    return Pclip.w >= 0;
+//    return Pclip.w >= 0;
+    return true;
 //    return
 //    abs(p.x) <= Pclip.w ;
 //    abs(p.y) <= Pclip.w &&
