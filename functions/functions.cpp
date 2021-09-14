@@ -4,7 +4,10 @@
 
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include "functions.h"
+#include "../abstr/buffer/VBO.h"
+#include "../abstr/VAO.h"
 
 void createWindow(GLFWwindow* &window, int width, int height){
     glfwInit();
@@ -117,6 +120,21 @@ void createShader(std::string vertexFile, std::string fragmentFile, GLuint& shad
 
 }
 
+
+void bindClassData(std::vector<GLfloat> points, GLuint &va){
+    VAO vao;
+    VBO vbo;
+    vao.Bind();
+    vbo.Bind();
+    vbo.Data<GLfloat>(std::move(points));
+    vao.Reserve(6 * sizeof(GLfloat));
+    vao.Add<GLfloat>(3);
+    vao.Add<GLfloat>(3);
+    vao.Unbind();
+    vbo.Unbind();
+
+    va = vao.ID;
+}
 
 
 void bindDataVec3(std::vector<GLfloat> points, GLuint &VAO, bool hasNormals) {

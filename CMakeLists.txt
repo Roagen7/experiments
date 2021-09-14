@@ -8,7 +8,7 @@ find_package(glfw3 3.3 REQUIRED)
 
 add_subdirectory(include/glad/)
 add_subdirectory(include/glm/)
-add_executable(untitled5 main.cpp functions/functions.cpp functions/functions.h projects/mandelbrot/main.cpp projects/mandelbrot/main.h projects/diffusion/main.cpp projects/diffusion/main.h projects/voxe/main.h projects/voxe/main.cpp functions/camera.h functions/camera.cpp projects/voxe/voxel.h projects/voxe/voxel.cpp projects/voxe/noise.cpp projects/voxe/noise.h)
+add_executable(untitled5 main.cpp functions/functions.cpp functions/functions.h projects/mandelbrot/main.cpp projects/mandelbrot/main.h projects/diffusion/main.cpp projects/diffusion/main.h projects/voxe/main.h projects/voxe/main.cpp functions/camera.h functions/camera.cpp projects/voxe/voxel.h projects/voxe/voxel.cpp projects/voxe/noise.cpp projects/voxe/noise.h projects/mandelbulb/main.h projects/mandelbulb/main.cpp abstr/buffer/VBO.cpp abstr/buffer/VBO.h abstr/VAO.cpp abstr/VAO.h abstr/Shader.cpp abstr/Shader.h)
 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)

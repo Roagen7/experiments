@@ -140,12 +140,9 @@ void voxe::gl_main() {
 
     std::vector<voxel> voxels;
 //    generateCaves(voxels);
-    generateMengerSponge(voxels, 3, 18);
+//    generateMengerSponge(voxels, 3, 18);
+    generateTerrain(voxels);
 
-
-    auto vox1 = voxel({0.0,0.0,0.0},{1.0,0.0,0.0});
-//    auto vox2 = voxel(vox1.locate(SOUTH),{0.0,0.0,1.0});
-//    auto vox3 = voxel(vox2.locate(UP),{0.0,1.0,0.0});
 
 
     while(!glfwWindowShouldClose(window)){
@@ -153,20 +150,13 @@ void voxe::gl_main() {
         glfwPollEvents();
         camera::input(window);
 
-//        glClearColor(178.0f/255.0f, 1.0f, 1.0f, 1.0f);
-        glClearColor(0.0,0.0,0.0,1.0);
+        glClearColor(178.0f/255.0f, 1.0f, 1.0f, 1.0f);
+//        glClearColor(0.0,0.0,0.0,1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(shaderProgram);
-//        vox1.draw(camera::view(), true, shaderProgram);
-//        vox2.draw(shaderProgram,camera::view());
-//        vox3.draw(shaderProgram,camera::view());
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         for(auto& vox : voxels){
-//
-
             vox.draw(camera::view(), true, shaderProgram);
-
         }
 
         glfwSwapBuffers(window);
