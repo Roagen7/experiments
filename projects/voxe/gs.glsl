@@ -4,7 +4,8 @@ layout (triangles) in;
 
 in mat4 cMat[];
 //in vec3 vx;
-out vec3 norm;
+in vec3 norms[];
+out vec3 norm[3];
 
 layout(triangle_strip, max_vertices = 3) out;
 
@@ -52,5 +53,9 @@ void main() {
     }
 //    gl_in[0].cMat;
 
-    norm = calculateNormal();
+
+    norm[0] = norms[0];
+    norm[1] = norms[1];
+    norm[2] = norms[2];
+//    norm = calculateNormal();
 }

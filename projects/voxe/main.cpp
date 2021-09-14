@@ -54,7 +54,9 @@ void generateMengerSponge(std::vector<voxel> &voxels, int iters = 3, float sideL
     // start0
     if(iters == 0){
 //        glm::vec3((float) rand()/RAND_MAX,1.0,(float) rand()/RAND_MAX)
-        voxels.emplace_back(start0,start0 / 9.0f , sideLen);
+//        voxels.emplace_back(start0,start0 / 9.0f , sideLen);
+        float noise = perlin3D(start0.x,start0.y,start0.z,AREA);
+        voxels.emplace_back(start0,glm::vec3(noise,noise,noise)  , sideLen);
         return;
     }
 
@@ -116,24 +118,29 @@ void voxe::gl_main() {
 //    glCullFace(GL_FRONT_AND_BACK);
 //    glFrontFace(GL_CW);
 
-//    for(int i = 0; i < cube.size(); i+=9){
-//        glm::vec3 v0(cube[i],cube[i+1],cube[i+2]);
-//        glm::vec3 v1(cube[i+3],cube[i+4],cube[i+5]);
-//        glm::vec3 v2(cube[i+6],cube[i+7],cube[i+8]);
-//
-//    }
+    for(int i = 0; i < cube.size(); i+=9){
+        glm::vec3 v0(cube[i],cube[i+1],cube[i+2]);
+        glm::vec3 v1(cube[i+3],cube[i+4],cube[i+5]);
+        glm::vec3 v2(cube[i+6],cube[i+7],cube[i+8]);
+
+        auto z1 = v1 - v0;
+        auto z2 = v2 - v0;
+
+        auto normal = glm::cross(z2,z1);
+        std::cout << normal.x <<"," <<normal.y <<"," << normal.z <<"," <<std::endl;
+        }
 
 
     GLuint shaderProgram;
-    createShader("../projects/voxe/vs.glsl","../projects/voxe/fs.glsl", shaderProgram, true, "../projects/voxe/gs.glsl");
-
+//    createShader("../projects/voxe/vs.glsl","../projects/voxe/fs.glsl", shaderProgram, true, "../projects/voxe/gs.glsl");
+    createShader("../projects/voxe/vs.glsl","../projects/voxe/fs.glsl", shaderProgram);
     camera::init(width,height,{0.0,0.0,0.0},{0.0,0.0,-1.0});
 
 
 
     std::vector<voxel> voxels;
-    generateCaves(voxels);
-//    generateMengerSponge(voxels, 3, 18);
+//    generateCaves(voxels);
+    generateMengerSponge(voxels, 3, 18);
 
 
     auto vox1 = voxel({0.0,0.0,0.0},{1.0,0.0,0.0});

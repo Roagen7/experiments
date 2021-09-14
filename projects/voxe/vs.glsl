@@ -5,6 +5,8 @@ layout (location = 1) in vec3 norm;
 
 out mat4 cMat;
 out vec3 vx;
+out vec3 Norm;
+
 uniform mat4 camMatrix;
 uniform mat4 modelMatrix;
 
@@ -13,5 +15,5 @@ uniform mat4 modelMatrix;
 void main() {
     gl_Position =  camMatrix * modelMatrix * vec4(pos,1.0);
     cMat = camMatrix * modelMatrix;
-
+    Norm = norm;
 }

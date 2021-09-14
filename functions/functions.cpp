@@ -119,7 +119,7 @@ void createShader(std::string vertexFile, std::string fragmentFile, GLuint& shad
 
 
 
-void bindDataVec3(std::vector<GLfloat> points, GLuint &VAO) {
+void bindDataVec3(std::vector<GLfloat> points, GLuint &VAO, bool hasNormals) {
     unsigned int VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -130,9 +130,18 @@ void bindDataVec3(std::vector<GLfloat> points, GLuint &VAO) {
 
     glBufferData(GL_ARRAY_BUFFER,points.size() * sizeof(GLfloat), points.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 3* sizeof(GLfloat), (void*)nullptr);
 
-    glEnableVertexAttribArray(0);
+    if(hasNormals){
+        glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 6* sizeof(GLfloat), (void*)nullptr);
+        glVertexAttribPointer(1,3,GL_FLOAT, GL_FALSE,6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+    } else {
+        glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 3* sizeof(GLfloat), (void*)nullptr);
+        glEnableVertexAttribArray(0);
+    }
+
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER,0);
