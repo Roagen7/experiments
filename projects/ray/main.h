@@ -5,6 +5,8 @@
 #ifndef UNTITLED5_RAY
 #define UNTITLED5_RAY
 
+
+#include "structs.h"
 namespace ray {
     void gl_main();
 
