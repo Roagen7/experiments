@@ -9,7 +9,7 @@
 #include "structs.h"
 namespace ray {
     void gl_main();
-
+    void handleEvents(GLFWwindow* window);
 
 
 }

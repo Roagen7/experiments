@@ -14,12 +14,16 @@ uniform vec3 sphColor[3];
 
 uniform float width;
 uniform float height;
+uniform vec3 E;
+
+uniform mat4 camRot;
+
 
 in vec2 pixPos;
 
 out vec4 FragColor;
 
-vec3 E = vec3(0,0,0);
+
 
 struct light {
     vec3 pos;
@@ -75,6 +79,7 @@ ray castRay(float x, float y){
     float xx = (2 * ((x + 0.5) * invWidth) - 1) * angle * aspectratio;
     float yy = (1 - 2 * ((y + 0.5) * invHeight)) * angle;
     r.dir = normalize(vec3(xx,yy,-1));
+    r.dir = vec3(vec4(r.dir,1.0f) * camRot);
     r.origin = E;
     return r;
 }
@@ -406,13 +411,6 @@ vec3 trace(ray primRay, int depth) {
 //}
 
 }
-
-
-
-
-
-
-
 
 
 void main() {

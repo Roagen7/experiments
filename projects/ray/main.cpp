@@ -14,13 +14,16 @@
 #include "../../functions/functions.h"
 #include "../../abstr/glsl/Shader.h"
 #include "Raycaster.h"
+#include "../../functions/camera.h"
 
 using glm::vec3;
 
 const int height = 1080;
 const int width = 1920;
 
-
+vec3 E = {0,0,0};
+vec3 dir = {0,0,-1};
+auto rot = glm::mat4(1.0f);
 
 void ray::gl_main() {
     std::vector<float> points;
@@ -87,13 +90,17 @@ void ray::gl_main() {
     shader.Unif("sphRadius",sphRadius);
     shader.Unif("sphColor",sphColor);
 
+
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
+            handleEvents(window);
 
             glClearColor(0.0,0.0,0.0,1.0);
             glClear(GL_COLOR_BUFFER_BIT);
 
             shader.Use();
+            shader.Unif("E",E);
+            shader.Unif("camRot", rot);
             vao.Bind();
             glDrawArrays(GL_POINTS, 0 , (float) points.size()/5.0);
 
@@ -104,3 +111,46 @@ void ray::gl_main() {
 
 
 }
+
+void ray::handleEvents(GLFWwindow* window){
+    vec3 UP = {0,1,0};
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+        E += dir;
+    }
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+        E -= dir;
+    }
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+        E += glm::cross(dir,UP);
+    }
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+        E -= glm::cross(dir,UP);
+    }
+    if(glfwGetKey(window,GLFW_KEY_SPACE) == GLFW_PRESS){
+        E += UP;
+    }
+    if(glfwGetKey(window,GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
+        E -= UP;
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
+        rot = glm::rotate(rot,0.01f, UP);
+        dir = glm::vec4(dir,1.0) * glm::rotate(glm::mat4(1.0f),0.01f ,UP);
+    }
+    if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
+        rot = glm::rotate(rot,-0.01f, UP);
+        dir = glm::vec4(dir,1.0) * glm::rotate(glm::mat4(1.0f),-0.01f ,UP);
+    }
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
+        rot = glm::rotate(rot,-0.01f, glm::cross(dir,UP));
+        dir = glm::vec4(dir,1.0) * glm::rotate(glm::mat4(1.0f),-0.01f ,glm::cross(dir,UP));
+    }
+    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
+        rot = glm::rotate(rot,0.01f, glm::cross(dir,UP));
+        dir = glm::vec4(dir,1.0) * glm::rotate(glm::mat4(1.0f),0.01f ,glm::cross(dir,UP));
+    }
+
+
+
+}
+
