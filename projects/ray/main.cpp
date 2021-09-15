@@ -26,6 +26,18 @@ float angle = tan(M_PI * 0.5 * fov / 180.);
 
 vec3 E = {0,0,0};
 
+struct light {
+    vec3 pos;
+    vec3 col;
+    light(vec3 p, vec3 c): pos(p), col(c){
+
+    };
+
+
+};
+
+light L({0.0,20.0,-30.0}, {1.0,1.0,1.0});
+
 struct triangle {
     glm::vec3 verts[3];
     glm::vec3 color;
@@ -80,6 +92,7 @@ void castRay(ray3& r,float x, float y){
     float xx = (2 * ((x + 0.5) * invWidth) - 1) * angle * aspectratio;
     float yy = (1 - 2 * ((y + 0.5) * invHeight)) * angle;
     r.dir = glm::normalize(vec3(xx, yy, -1));
+    r.dir = glm::vec3 (glm::rotate(glm::mat4(1.0f), 0.0f, vec3(0.0,1.0,0.0)) * glm::vec4(r.dir,1.0));
     r.origin = E;
 }
 
@@ -87,7 +100,7 @@ float distSq(vec3 p1, vec3 p2){
     return p1.x * p2.x + p1.y * p2.y + p1.z * p2.z;
 }
 
-vec3 trace(ray3 primRay, std::vector<sphere> objects){
+vec3 trace(ray3 primRay, std::vector<sphere> objects, int depth = 0){
     sphere small_sphere;
     bool hit = false;
     float t_near = INFINITY;
@@ -106,7 +119,27 @@ vec3 trace(ray3 primRay, std::vector<sphere> objects){
         }
 
     }
+
     if(hit){
+        ray3 shadowRay;
+        vec3 pHit = primRay.origin + primRay.dir * t_near;
+        vec3 nHit = pHit - small_sphere.center;
+
+        shadowRay.origin = pHit + 0.2f*glm::normalize(nHit);
+        shadowRay.dir = glm::normalize(L.pos - pHit);
+        bool isInShadow = false;
+
+        for(auto o : objects){
+            float t0 = INFINITY;
+            float t1 = INFINITY;
+            if(intersect(o,shadowRay,t0,t1) && o.center != small_sphere.center){
+                isInShadow = true;
+            }
+        }
+        if(isInShadow){
+            return  (small_sphere.color) / 2.0f;
+        }
+
         return small_sphere.color;
     } else {
         return {0,0,0};
@@ -120,10 +153,11 @@ void ray::gl_main() {
     std::vector<float> points;
     std::vector<triangle> triangles;
     std::vector<sphere> objects;
-    objects.reserve(3);
+    objects.reserve(4);
 
     objects.emplace_back(vec3(0.0,-1004.0,-20.0),1000, vec3((0.20,0.20,0.20)));
-    objects.emplace_back(vec3(0.0,0.0,-20), 4.0, vec3(1.0,0.32,0.36));
+    objects.emplace_back(vec3(0.0,0.0,-30), 4.0, vec3(1.0,0.32,0.36));
+    objects.emplace_back(vec3(5.0,     -2, -33), 2.0, vec3(0.90, 0.76, 0.46));
 
     for(int x = 0; x < width; x++){
         for(int y = 0; y < height; y++){
@@ -140,6 +174,9 @@ void ray::gl_main() {
 
         }
     }
+
+
+
 
 
 
