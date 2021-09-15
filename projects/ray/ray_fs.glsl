@@ -1,19 +1,24 @@
 #version 330 core
 
+#define MAX_OBJNUM 10
 
-#define OBJNUM 3
+
 #define M_PI 3.1415926538
 #define FLT_MAX 3.402823466e+38
 #define MAX_DEPTH 3
 
 
 
-uniform vec3 sphCenter[3];
-uniform float sphRadius[3];
-uniform vec3 sphColor[3];
+
+uniform int OBJNUM;
+uniform vec3 sphCenter[MAX_OBJNUM];
+uniform float sphRadius[MAX_OBJNUM];
+uniform vec3 sphColor[MAX_OBJNUM];
 
 uniform float width;
 uniform float height;
+uniform float fov;
+
 uniform vec3 E;
 
 uniform mat4 camRot;
@@ -42,6 +47,7 @@ struct sphere {
     float radius;
     vec3 color;
 
+    float transparency;
 };
 
 sphere createSphere(vec3 center, float radius, vec3 color){
@@ -52,7 +58,7 @@ sphere createSphere(vec3 center, float radius, vec3 color){
     return sph;
 }
 
-sphere objects[OBJNUM];
+sphere objects[MAX_OBJNUM];
 
 bool intersect(sphere sph, ray r, inout float t0, inout float t1){
     vec3 l = sph.center - r.origin;
@@ -72,7 +78,7 @@ ray castRay(float x, float y){
     ray r;
     float invWidth = 1.0 / float(width);
     float invHeight = 1.0 / float(height);
-    float fov = 30;
+//    float fov = 30;
     float aspectratio = float(width) / float(height);
     float angle = tan(M_PI * 0.5 * fov / 180.);
 
@@ -244,7 +250,7 @@ vec3 trace2(ray primRay, int depth) {
     } else {
         return vec3(0, 0, 0);
     }
-    //}
+
 
 }
 
@@ -280,17 +286,13 @@ vec3 trace1(ray primRay, int depth) {
 
         vec3 addCol;
 
-        //
-        //
                 if(depth != MAX_DEPTH){
                     ray nextRay;
                     nextRay.dir = normalize(reflect(primRay.dir,  normalize(nHit)));
                     nextRay.origin = pHit + 0.2f*normalize(nHit);
                     addCol = trace2(nextRay,depth + 1);
                 }
-        //
-        //
-        //
+
         shadowRay.origin = pHit + 0.2f*normalize(nHit);
         shadowRay.dir = normalize(lite.pos - pHit);
         bool isInShadow = false;
@@ -424,5 +426,6 @@ void main() {
     vec3 col = trace(primRay,0);
 //    FragColor = vec4(width/1920,width/1920,width/1920,1.0);
 //    FragColor = vec4(primRay.dir.x,primRay.dir.y,width/1920,1.0);
+//    col = sphColor[3];
     FragColor = vec4(col.x,col.y,col.z,1.0);
 }

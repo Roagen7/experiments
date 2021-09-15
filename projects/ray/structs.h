@@ -41,6 +41,8 @@ struct sphere {
     vec3 center;
     float radius, radiusSq;
     vec3 color;
+    float reflect;
+    float transparent;
 
     sphere(vec3 cen,float rad, vec3 col):center(cen),radius(rad),color(col){
         radiusSq = rad * rad;

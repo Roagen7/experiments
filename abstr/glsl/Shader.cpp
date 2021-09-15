@@ -125,5 +125,10 @@ void Shader::Unif(const std::string &unifname, std::vector<float> floatarr) {
     glUniform1fv(glGetUniformLocation(this->ID,unifname.c_str()), floatarr.size(), floatarr.data());
 }
 
+void Shader::Unif(const std::string &unifname, int val) {
+    this->Use();
+    glUniform1i(glGetUniformLocation(this->ID,unifname.c_str()), val);
+}
+
 
 
