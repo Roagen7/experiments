@@ -18,6 +18,7 @@ using glm::vec3;
 
 const int height = 1080;
 const int width = 1920;
+const int MAX_DEPTH = 3;
 
 float invWidth = 1 / float(width), invHeight = 1 / float(height);
 float fov = 30, aspectratio = width / float(height);
@@ -122,12 +123,39 @@ vec3 trace(ray3 primRay, std::vector<sphere> objects, int depth = 0){
 
     if(hit){
         ray3 shadowRay;
+
         vec3 pHit = primRay.origin + primRay.dir * t_near;
         vec3 nHit = pHit - small_sphere.center;
+
+        vec3 addCol;
+
+        if(depth != MAX_DEPTH){
+            ray3 nextRay;
+            nextRay.dir = glm::normalize(glm::reflect(primRay.dir,  glm::normalize(nHit)));
+            nextRay.origin = pHit + 0.2f*glm::normalize(nHit);
+
+            addCol = trace(nextRay,objects,depth + 1);
+        }
+
+
 
         shadowRay.origin = pHit + 0.2f*glm::normalize(nHit);
         shadowRay.dir = glm::normalize(L.pos - pHit);
         bool isInShadow = false;
+
+        vec3 outCol;
+//        if(depth == 0){
+//            outCol = small_sphere.color * (glm::dot(shadowRay.dir, glm::normalize(nHit)) + 0.7f);
+//        } else {
+//            outCol = small_sphere.color;
+//        }
+        if(depth != MAX_DEPTH){
+            outCol = (small_sphere.color + addCol) / 2.0f * (glm::dot(shadowRay.dir, glm::normalize(nHit)) + 0.7f);
+        } else {
+            outCol = small_sphere.color * (glm::dot(shadowRay.dir, glm::normalize(nHit)) + 0.7f);
+        }
+
+
 
         for(auto o : objects){
             float t0 = INFINITY;
@@ -137,10 +165,11 @@ vec3 trace(ray3 primRay, std::vector<sphere> objects, int depth = 0){
             }
         }
         if(isInShadow){
-            return  (small_sphere.color) / 2.0f;
+            return  outCol / 2.0f;
+//            return {0,0,0};
         }
 
-        return small_sphere.color;
+        return outCol;
     } else {
         return {0,0,0};
     }
@@ -157,8 +186,9 @@ void ray::gl_main() {
 
     objects.emplace_back(vec3(0.0,-1004.0,-20.0),1000, vec3((0.20,0.20,0.20)));
     objects.emplace_back(vec3(0.0,0.0,-30), 4.0, vec3(1.0,0.32,0.36));
-    objects.emplace_back(vec3(5.0,     -2, -33), 2.0, vec3(0.90, 0.76, 0.46));
-
+    objects.emplace_back(vec3(5.0,     -2.0, -33), 2.0, vec3(0.90, 0.76, 0.46));
+//    objects.emplace_back(vec3(5.0,     0.0, -25), 3.0, vec3(0.65, 0.77, 0.97));
+//    objects.emplace_back(vec3(5.0,     -0.0, -15), 3.0, vec3(0.90, 0.90, 0.90));
     for(int x = 0; x < width; x++){
         for(int y = 0; y < height; y++){
             ray3 r;
