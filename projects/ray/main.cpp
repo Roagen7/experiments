@@ -32,15 +32,15 @@ void ray::gl_main() {
     objects.emplace_back(vec3(0.0,0.0,-40), 4.0, vec3(1.0,0.32,0.36));
     objects.emplace_back(vec3(5.0,     -2.0, -30), 2.0, vec3(0.90, 0.76, 0.46));
 
-    Raycaster rc(width, height, vec3(0,0,0), vec3(0,0,0));
+    Raycaster rc(width, height, vec3(0,0,-10), vec3(0,-0.3,0));
 
     for(int x = 0; x < width; x++){
         for(int y = 0; y < height; y++){
-            ray3 r;
-            rc.castRay(r,x,y);
-
-            vec3 col = rc.trace(r,objects);
-
+//            ray3 r;
+//            rc.castRay(r,x,y);
+//
+//            vec3 col = rc.trace(r,objects);
+            vec3 col = {0,0,0};
             points.push_back(x);
             points.push_back(y);
             points.push_back(col.x);
@@ -58,7 +58,8 @@ void ray::gl_main() {
     GLFWwindow* window;
     createWindow(window, width,height);
 
-    Shader shader("../projects/ray/vs.glsl","../projects/ray/fs.glsl");
+//    Shader shader("../projects/ray/vs.glsl","../projects/ray/fs.glsl");
+
     VAO vao; VBO vbo;
     vao.Bind();
     vbo.Bind();
@@ -69,9 +70,22 @@ void ray::gl_main() {
     vao.Unbind();
     vbo.Unbind();
 
+    Shader shader("../projects/ray/ray_vs.glsl", "../projects/ray/ray_fs.glsl");
+
+    std::vector<glm::vec3> sphCenter;
+    std::vector<float> sphRadius;
+    std::vector<glm::vec3> sphColor;
+    for(auto o : objects){
+        sphCenter.push_back(o.center);
+        sphRadius.push_back(o.radius);
+        sphColor.push_back(o.color);
+    }
+
     shader.Unif("width",width);
     shader.Unif("height",height);
-
+    shader.Unif("sphCenter",sphCenter);
+    shader.Unif("sphRadius",sphRadius);
+    shader.Unif("sphColor",sphColor);
 
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();

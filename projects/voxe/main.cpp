@@ -18,7 +18,7 @@ unsigned SEED_C = rand();
 // x in [0,1)
 
 void generateTerrain(std::vector<voxel>& voxels){
-    const int W = 150;
+    const int W = 50;
     const int H = 100;
     voxels.reserve(W * H);
 

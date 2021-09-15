@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
+#include <vector>
 
 class Shader {
 private:
@@ -24,6 +25,8 @@ public:
     void Unif(const std::string& unifname,glm::mat4 mat);
     void Unif(const std::string& unifname, glm::vec3 vec);
     void Unif(const std::string& unifname, float val);
+    void Unif(const std::string& unifname, std::vector<glm::vec3> vec3arr);
+    void Unif(const std::string& unifname, std::vector<float> floatarr);
     void Delete();
 };
 

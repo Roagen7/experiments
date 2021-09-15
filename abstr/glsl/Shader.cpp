@@ -115,5 +115,15 @@ void Shader::Delete() {
     glDeleteProgram(this->ID);
 }
 
+void Shader::Unif(const std::string &unifname, std::vector<glm::vec3> vec3arr) {
+    this->Use();
+    glUniform3fv(glGetUniformLocation(this->ID,unifname.c_str()), vec3arr.size(), (const GLfloat*) vec3arr.data());
+}
+
+void Shader::Unif(const std::string &unifname, std::vector<float> floatarr) {
+    this->Use();
+    glUniform1fv(glGetUniformLocation(this->ID,unifname.c_str()), floatarr.size(), floatarr.data());
+}
+
 
 
