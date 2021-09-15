@@ -6,8 +6,7 @@
 #include <fstream>
 #include <utility>
 #include "functions.h"
-#include "../abstr/buffer/VBO.h"
-#include "../abstr/VAO.h"
+
 
 void createWindow(GLFWwindow* &window, int width, int height){
     glfwInit();
@@ -121,7 +120,7 @@ void createShader(std::string vertexFile, std::string fragmentFile, GLuint& shad
 }
 
 
-void bindClassData(std::vector<GLfloat> points, GLuint &va){
+VAO bindClassData(std::vector<GLfloat> points){
     VAO vao;
     VBO vbo;
     vao.Bind();
@@ -133,7 +132,7 @@ void bindClassData(std::vector<GLfloat> points, GLuint &va){
     vao.Unbind();
     vbo.Unbind();
 
-    va = vao.ID;
+    return vao;
 }
 
 

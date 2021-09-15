@@ -23,7 +23,7 @@ public:
     void Reserve(GLsizei s);
     void Bind();
     void Unbind();
-
+    void Delete();
 
     template <typename T>
     void Add(int n);

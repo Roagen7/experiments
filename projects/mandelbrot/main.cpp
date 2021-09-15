@@ -8,7 +8,7 @@
 const int width = 1920;
 const int height = 1080;
 
-const int ITERS = 100;
+const int ITERS = 200;
 const int SET = 1; // 0 - mandelbrot 1 - julia
 
  std::complex<float>Z_0 = {-1.5,1.0};

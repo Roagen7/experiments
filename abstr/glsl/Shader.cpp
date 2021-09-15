@@ -4,7 +4,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #include "Shader.h"
-#include "../functions/functions.h"
+#include "../../functions/functions.h"
 
 Shader::Shader(std::string vertexFile, std::string fragmentFile) {
     GLuint vertexShader, fragmentShader;
@@ -96,7 +96,24 @@ void Shader::Use() {
     glUseProgram(this->ID);
 }
 
-void Shader::Unif(std::string unifname,glm::mat4 mat) {
+void Shader::Unif(const std::string& unifname,glm::mat4 mat) {
+    this->Use();
     glUniformMatrix4fv(glGetUniformLocation(this->ID,unifname.c_str()), 1, GL_FALSE, glm::value_ptr( mat));
 }
+
+void Shader::Unif(const std::string& unifname, glm::vec3 vec) {
+    this->Use();
+    glUniform3f(glGetUniformLocation(this->ID,unifname.c_str()), vec.x, vec.y, vec.z);
+}
+
+void Shader::Unif(const std::string& unifname, float val) {
+    this->Use();
+    glUniform1f(glGetUniformLocation(this->ID,unifname.c_str()), val);
+}
+
+void Shader::Delete() {
+    glDeleteProgram(this->ID);
+}
+
+
 

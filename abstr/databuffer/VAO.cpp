@@ -26,6 +26,10 @@ void VAO::Unbind() {
     glBindVertexArray(0);
 }
 
+void VAO::Delete() {
+    glDeleteVertexArrays(1,&this->ID);
+}
+
 template<>
 void VAO::Add<GLfloat>(int n){
     glVertexAttribPointer(this->loc,n, GL_FLOAT, GL_FALSE,this->stride, (void *) this->offset);

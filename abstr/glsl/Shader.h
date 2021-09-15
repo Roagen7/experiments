@@ -21,11 +21,10 @@ public:
     static void getErrors(GLuint shader, std::string type);
 
     void Use();
-
-
-    void Unif(std::string unifname,glm::mat4 mat);
-
-
+    void Unif(const std::string& unifname,glm::mat4 mat);
+    void Unif(const std::string& unifname, glm::vec3 vec);
+    void Unif(const std::string& unifname, float val);
+    void Delete();
 };
 
 

@@ -2,8 +2,11 @@
 #include "projects/mandelbrot/main.h"
 #include "projects/voxe/main.h"
 #include "projects/mandelbulb/main.h"
+#include "projects/ray/main.h"
+
+
 
 int main() {
-    mandelbulb::gl_main();
+    ray::gl_main();
     return 0;
 }
