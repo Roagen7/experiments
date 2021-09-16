@@ -14,6 +14,8 @@ uniform int OBJNUM;
 uniform vec3 sphCenter[MAX_OBJNUM];
 uniform float sphRadius[MAX_OBJNUM];
 uniform vec3 sphColor[MAX_OBJNUM];
+uniform vec3 sphReflect[MAX_OBJNUM];
+uniform vec3 sphTransparent[MAX_OBJNUM];
 
 uniform float width;
 uniform float height;
@@ -47,7 +49,8 @@ struct sphere {
     float radius;
     vec3 color;
 
-    float transparency;
+    float reflect;
+    float transparent;
 };
 
 sphere createSphere(vec3 center, float radius, vec3 color){
@@ -73,6 +76,34 @@ bool intersect(sphere sph, ray r, inout float t0, inout float t1){
     return true;
 }
 
+bool traceToLightSource(ray shadowRay, sphere small_sphere){
+    for(int i = 0; i < OBJNUM; i++){
+        sphere o = objects[i];
+        float t0 = FLT_MAX;
+        float t1 = FLT_MAX;
+        if(intersect(o,shadowRay,t0,t1) && o.center != small_sphere.center){
+            return true;
+        }
+    }
+
+
+    return false;
+}
+
+vec3 calculatePointPHONG(int depth,ray shadowRay, vec3 nHit, vec3 pHit, vec3 col1, vec3 col2){
+    float diffuse = (dot(shadowRay.dir, normalize(nHit)));
+    float ambient = 0.7;
+    float specular = pow(max(dot(normalize(E - pHit),normalize(reflect(-shadowRay.dir, normalize(nHit)))), 0.0f),16);
+    float phong = diffuse + ambient + specular;
+    vec3 outCol;
+    if(depth != MAX_DEPTH){
+        outCol = ( 2.f * col1 + col2) / 3.0f * phong;
+    } else {
+        outCol = col1 * phong;
+    }
+
+    return outCol;
+}
 
 ray castRay(float x, float y){
     ray r;
@@ -334,6 +365,11 @@ vec3 trace1(ray primRay, int depth) {
 
 vec3 trace(ray primRay, int depth) {
 
+    vec3 addCols[MAX_OBJNUM];
+    ray currentRay = primRay;
+
+
+
     sphere small_sphere;
     bool hit = false;
     float t_near = FLT_MAX;
@@ -343,7 +379,7 @@ vec3 trace(ray primRay, int depth) {
         float t0 = FLT_MAX;
         float t1 = FLT_MAX;
 
-        if(intersect(o,primRay,t0,t1)){
+        if(intersect(o,currentRay,t0,t1)){
             if(t0 < 0) {
                 t0 = t1;
             }
@@ -377,32 +413,9 @@ vec3 trace(ray primRay, int depth) {
 //
         shadowRay.origin = pHit + 0.2f*normalize(nHit);
         shadowRay.dir = normalize(lite.pos - pHit);
-        bool isInShadow = false;
-//
-        vec3 outCol;
-//
-        float diffuse = (dot(shadowRay.dir, normalize(nHit)));
-        float ambient = 0.7;
-        float specular = pow(max(dot(normalize(E - pHit),normalize(reflect(-shadowRay.dir, normalize(nHit)))), 0.0f),16);
-//
-//
-        float phong = diffuse + ambient + specular;
-//
-        if(depth != MAX_DEPTH){
-            outCol = ( 2.f * small_sphere.color + addCol) / 3.0f * phong;
-        } else {
-            outCol = small_sphere.color * phong;
-        }
-//
-//
-        for(int i = 0; i < OBJNUM; i++){
-            sphere o = objects[i];
-            float t0 = FLT_MAX;
-            float t1 = FLT_MAX;
-            if(intersect(o,shadowRay,t0,t1) && o.center != small_sphere.center){
-                isInShadow = true;
-            }
-        }
+        bool isInShadow = traceToLightSource(shadowRay, small_sphere);
+        vec3 outCol = calculatePointPHONG(depth, shadowRay, nHit, pHit, small_sphere.color, addCol);
+
         if(isInShadow){
             return  outCol / 2.0f;
         }

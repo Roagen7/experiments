@@ -37,6 +37,8 @@ void ray::gl_main() {
 //    objects.emplace_back(vec3(3.0,     5.0, -30), 2.0, vec3(0.90, 0.76, 0.46));
     objects.emplace_back(vec3(-5.5,0,-15.0),2, vec3(0.9, 0.9, 0.9));
 
+
+
     Raycaster rc(width, height, vec3(0,0,-10), vec3(0,-0.3,0));
 
     for(int x = 0; x < width; x++){
@@ -96,18 +98,17 @@ void ray::gl_main() {
 
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
-            handleEvents(window);
+        handleEvents(window);
 
-            glClearColor(0.0,0.0,0.0,1.0);
-            glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.0,0.0,0.0,1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-            shader.Use();
-            shader.Unif("E",E);
-            shader.Unif("camRot", rot);
+        shader.Use();
+        shader.Unif("E",E);
+        shader.Unif("camRot", rot);
         shader.Unif("fov", fov);
-            vao.Bind();
-            glDrawArrays(GL_POINTS, 0 , (float) points.size()/5.0);
-
+        vao.Bind();
+        glDrawArrays(GL_POINTS, 0 , (float) points.size()/5.0);
 
         glfwSwapBuffers(window);
     }
