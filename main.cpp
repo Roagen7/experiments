@@ -7,6 +7,6 @@
 
 
 int main() {
-    mandelbulb::gl_main();
+    ray::gl_main();
     return 0;
 }

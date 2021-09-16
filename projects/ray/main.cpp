@@ -25,29 +25,36 @@ vec3 E = {0,0,0};
 vec3 dir = {0,0,-1};
 auto rot = glm::mat4(1.0f);
 float fov = 30.0;
+bool GPU = true;
+
 void ray::gl_main() {
     std::vector<float> points;
     std::vector<triangle> triangles;
     std::vector<sphere> objects;
-//    objects.reserve(4);
+
 
     objects.emplace_back(vec3(0.0,-1004.0,-20.0),1000, vec3((0.20,0.20,0.20)));
     objects.emplace_back(vec3(0.0,0.0,-40), 4.0, vec3(1.0,0.32,0.36));
     objects.emplace_back(vec3(5.0,     -2.0, -30), 2.0, vec3(0.90, 0.76, 0.46));
-//    objects.emplace_back(vec3(3.0,     5.0, -30), 2.0, vec3(0.90, 0.76, 0.46));
     objects.emplace_back(vec3(-5.5,0,-15.0),3.0, vec3(0.9, 0.9, 0.9));
+    objects.emplace_back(vec3(-10.0, 3.0, -10.0), 6.0, vec3(0.0,1.0,0.0));
 
 
-
-    Raycaster rc(width, height, vec3(0,0,-10), vec3(0,-0.3,0));
+    Raycaster rc(width, height, E, vec3(0,0.0,0));
 
     for(int x = 0; x < width; x++){
         for(int y = 0; y < height; y++){
-//            ray3 r;
-//            rc.castRay(r,x,y);
-//
-//            vec3 col = rc.trace(r,objects);
             vec3 col = {0,0,0};
+
+            if(!GPU){
+                ray3 r;
+                rc.castRay(r,x,y);
+
+                col = rc.trace(r,objects);
+            }
+
+
+
             points.push_back(x);
             points.push_back(y);
             points.push_back(col.x);
@@ -65,7 +72,6 @@ void ray::gl_main() {
     GLFWwindow* window;
     createWindow(window, width,height);
 
-//    Shader shader("../projects/ray/vs.glsl","../projects/ray/fs.glsl");
 
     VAO vao; VBO vbo;
     vao.Bind();
@@ -78,35 +84,55 @@ void ray::gl_main() {
     vbo.Unbind();
 
     Shader shader("../projects/ray/ray_vs.glsl", "../projects/ray/ray_fs.glsl");
+    Shader CPUshader("../projects/ray/vs.glsl", "../projects/ray/fs.glsl");
 
-    std::vector<glm::vec3> sphCenter;
-    std::vector<float> sphRadius;
-    std::vector<glm::vec3> sphColor;
-    for(auto o : objects){
-        sphCenter.push_back(o.center);
-        sphRadius.push_back(o.radius);
-        sphColor.push_back(o.color);
+
+
+    if(GPU){
+        std::vector<glm::vec3> sphCenter;
+        std::vector<float> sphRadius;
+        std::vector<glm::vec3> sphColor;
+        for(auto o : objects){
+            sphCenter.push_back(o.center);
+            sphRadius.push_back(o.radius);
+            sphColor.push_back(o.color);
+            shader.Unif("OBJNUM",(int) objects.size());
+
+            shader.Unif("width",(float) width);
+            shader.Unif("height",(float) height);
+            shader.Unif("sphCenter",sphCenter);
+            shader.Unif("sphRadius",sphRadius);
+            shader.Unif("sphColor",sphColor);
+        }
+    } else {
+        CPUshader.Unif("width", (float) width);
+        CPUshader.Unif("height", (float) height);
+
     }
 
-    shader.Unif("OBJNUM",4);
-
-    shader.Unif("width",(float) width);
-    shader.Unif("height",(float) height);
-    shader.Unif("sphCenter",sphCenter);
-    shader.Unif("sphRadius",sphRadius);
-    shader.Unif("sphColor",sphColor);
 
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
-        handleEvents(window);
+
+        if(GPU){
+            handleEvents(window);
+        }
+
 
         glClearColor(0.0,0.0,0.0,1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shader.Use();
-        shader.Unif("E",E);
-        shader.Unif("camRot", rot);
-        shader.Unif("fov", fov);
+
+
+        if(GPU){
+            shader.Use();
+            shader.Unif("E",E);
+            shader.Unif("camRot", rot);
+            shader.Unif("fov", fov);
+        } else {
+            CPUshader.Use();
+        }
+
         vao.Bind();
         glDrawArrays(GL_POINTS, 0 , (float) points.size()/5.0);
 

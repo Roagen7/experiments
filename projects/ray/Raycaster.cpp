@@ -65,11 +65,11 @@ vec3 Raycaster::trace(ray3 primRay, std::vector<sphere> objects, int depth) {
 
 
             if(depth != MAX_DEPTH){
-                ray3 nextRay;
-                nextRay.dir = glm::normalize(glm::reflect(primRay.dir,  glm::normalize(nHit)));
-                nextRay.origin = pHit + 0.2f*glm::normalize(nHit);
+                ray3 reflectRay;
+                reflectRay.dir = glm::normalize(glm::reflect(primRay.dir, glm::normalize(nHit)));
+                reflectRay.origin = pHit + 0.2f * glm::normalize(nHit);
 
-                addCol = trace(nextRay,objects,depth + 1);
+                addCol = trace(reflectRay, objects, depth + 1);
             }
 
 

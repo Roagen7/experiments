@@ -53,11 +53,12 @@ struct sphere {
     float transparent;
 };
 
-sphere createSphere(vec3 center, float radius, vec3 color){
+sphere createSphere(vec3 center, float radius, vec3 color, float reflect){
     sphere sph;
     sph.center = center;
     sph.radius = radius;
     sph.color = color;
+    sph.reflect = reflect;
     return sph;
 }
 
@@ -228,6 +229,7 @@ vec3 trace() {
     vec3 addCols[MAX_DEPTH + 1];
     ray primRay = castRay(pixPos.x,pixPos.y);
     ray currentRay = primRay;
+    float currentReflect = 1.0;
 
     int depth = 0;
 
@@ -249,7 +251,7 @@ vec3 trace() {
             shadowRay.origin = pHit + 0.2f*normalize(nHit);
             shadowRay.dir = normalize(lite.pos - pHit);
             bool isInShadow = traceToLightSource(shadowRay, small_sphere);
-            vec3 outCol = calculatePointPHONG(shadowRay, nHit, pHit, small_sphere.color);
+            vec3 outCol = calculatePointPHONG(shadowRay, nHit, pHit, small_sphere.color) * currentReflect;
 
             if(isInShadow){
                addCols[depth] = outCol / 2.0 ;
@@ -261,6 +263,7 @@ vec3 trace() {
             reflectRay.dir = normalize(reflect(currentRay.dir,  normalize(nHit)));
             reflectRay.origin = pHit + 0.2f*normalize(nHit);
             currentRay = reflectRay;
+            currentReflect = small_sphere.reflect;
 
         } else {
             addCols[depth] =  vec3(0.0, 0, 0.0);
@@ -282,7 +285,7 @@ vec3 trace() {
 void main() {
 
     for(int i = 0; i < OBJNUM; i++){
-        objects[i] = createSphere(sphCenter[i],sphRadius[i],sphColor[i]);
+        objects[i] = createSphere(sphCenter[i],sphRadius[i],sphColor[i], 1.0);
     }
     lite.pos = vec3(0,20,-30);
     lite.color = vec3(1,1,1);
