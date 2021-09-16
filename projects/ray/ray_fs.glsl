@@ -5,7 +5,7 @@
 
 #define M_PI 3.1415926538
 #define FLT_MAX 3.402823466e+38
-#define MAX_DEPTH 3
+#define MAX_DEPTH 2
 
 
 
@@ -90,20 +90,43 @@ bool traceToLightSource(ray shadowRay, sphere small_sphere){
     return false;
 }
 
-vec3 calculatePointPHONG(int depth,ray shadowRay, vec3 nHit, vec3 pHit, vec3 col1, vec3 col2){
+vec3 calculatePointPHONG(ray shadowRay, vec3 nHit, vec3 pHit, vec3 col){
     float diffuse = (dot(shadowRay.dir, normalize(nHit)));
-    float ambient = 0.7;
+    float ambient = 0.3;
     float specular = pow(max(dot(normalize(E - pHit),normalize(reflect(-shadowRay.dir, normalize(nHit)))), 0.0f),16);
     float phong = diffuse + ambient + specular;
     vec3 outCol;
-    if(depth != MAX_DEPTH){
-        outCol = ( 2.f * col1 + col2) / 3.0f * phong;
-    } else {
-        outCol = col1 * phong;
-    }
+
+    outCol = col * phong;
+
 
     return outCol;
 }
+
+bool isIntersectingSphere(ray currentRay, inout sphere small_sphere, inout float t_near){
+    t_near = FLT_MAX;
+    bool hit = false;
+    for(int i = 0; i < OBJNUM; i++){
+        sphere o = objects[i];
+        float t0 = FLT_MAX;
+        float t1 = FLT_MAX;
+
+        if(intersect(o,currentRay,t0,t1)){
+            if(t0 < 0) {
+                t0 = t1;
+            }
+            if(t0 < t_near){
+                t_near = t0;
+                small_sphere = o;
+                hit = true;
+            }
+        }
+    }
+    return hit;
+
+}
+
+
 
 ray castRay(float x, float y){
     ray r;
@@ -121,169 +144,7 @@ ray castRay(float x, float y){
     return r;
 }
 
-vec3 trace3(ray primRay, int depth) {
 
-    sphere small_sphere;
-    bool hit = false;
-    float t_near = FLT_MAX;
-
-    for(int i = 0; i < OBJNUM; i++){
-        sphere o = objects[i];
-        float t0 = FLT_MAX;
-        float t1 = FLT_MAX;
-
-        if(intersect(o,primRay,t0,t1)){
-            if(t0 < 0) {
-                t0 = t1;
-            }
-            if(t0 < t_near){
-                t_near = t0;
-                small_sphere = o;
-                hit = true;
-            }
-        }
-    }
-
-
-    if(hit){
-        ray shadowRay;
-
-        vec3 pHit = primRay.origin + primRay.dir * t_near;
-        vec3 nHit = pHit - small_sphere.center;
-
-        vec3 addCol;
-
-        //
-        //
-        //        if(depth != MAX_DEPTH){
-        //            ray nextRay;
-        //            nextRay.dir = normalize(reflect(primRay.dir,  normalize(nHit)));
-        //            nextRay.origin = pHit + 0.2f*normalize(nHit);
-        //            addCol = trace(nextRay,depth + 1);
-        //        }
-        //
-        //
-        //
-        shadowRay.origin = pHit + 0.2f*normalize(nHit);
-        shadowRay.dir = normalize(lite.pos - pHit);
-        bool isInShadow = false;
-        //
-        vec3 outCol;
-        //
-        float diffuse = (dot(shadowRay.dir, normalize(nHit)));
-        float ambient = 0.7;
-        float specular = pow(max(dot(normalize(E - pHit),normalize(reflect(-shadowRay.dir, normalize(nHit)))), 0.0f),16);
-        //
-        //
-        float phong = diffuse + ambient + specular;
-        //
-        //        if(depth != MAX_DEPTH){
-        //            outCol = ( 2.f * small_sphere.color + addCol) / 3.0f * phong;
-        //        } else {
-        outCol = small_sphere.color * phong;
-        //        }
-        //
-        //
-        for(int i = 0; i < OBJNUM; i++){
-            sphere o = objects[i];
-            float t0 = FLT_MAX;
-            float t1 = FLT_MAX;
-            if(intersect(o,shadowRay,t0,t1) && o.center != small_sphere.center){
-                isInShadow = true;
-            }
-        }
-        if(isInShadow){
-            return  outCol / 2.0f;
-        }
-        return outCol;
-    } else {
-        return vec3(0, 0, 0);
-    }
-    //}
-
-}
-
-vec3 trace2(ray primRay, int depth) {
-
-    sphere small_sphere;
-    bool hit = false;
-    float t_near = FLT_MAX;
-
-    for(int i = 0; i < OBJNUM; i++){
-        sphere o = objects[i];
-        float t0 = FLT_MAX;
-        float t1 = FLT_MAX;
-
-        if(intersect(o,primRay,t0,t1)){
-            if(t0 < 0) {
-                t0 = t1;
-            }
-            if(t0 < t_near){
-                t_near = t0;
-                small_sphere = o;
-                hit = true;
-            }
-        }
-    }
-
-
-    if(hit){
-        ray shadowRay;
-
-        vec3 pHit = primRay.origin + primRay.dir * t_near;
-        vec3 nHit = pHit - small_sphere.center;
-
-        vec3 addCol;
-
-        //
-        //
-                if(depth != MAX_DEPTH){
-                    ray nextRay;
-                    nextRay.dir = normalize(reflect(primRay.dir,  normalize(nHit)));
-                    nextRay.origin = pHit + 0.2f*normalize(nHit);
-                    addCol = trace3(nextRay,depth + 1);
-                }
-        //
-        //
-        //
-        shadowRay.origin = pHit + 0.2f*normalize(nHit);
-        shadowRay.dir = normalize(lite.pos - pHit);
-        bool isInShadow = false;
-        //
-        vec3 outCol;
-        //
-        float diffuse = (dot(shadowRay.dir, normalize(nHit)));
-        float ambient = 0.7;
-        float specular = pow(max(dot(normalize(E - pHit),normalize(reflect(-shadowRay.dir, normalize(nHit)))), 0.0f),16);
-        //
-        //
-        float phong = diffuse + ambient + specular;
-        //
-        if(depth != MAX_DEPTH){
-            outCol = ( 2.f * small_sphere.color + addCol) / 3.0f * phong;
-        } else {
-            outCol = small_sphere.color * phong;
-        }
-        //
-        //
-        for(int i = 0; i < OBJNUM; i++){
-            sphere o = objects[i];
-            float t0 = FLT_MAX;
-            float t1 = FLT_MAX;
-            if(intersect(o,shadowRay,t0,t1) && o.center != small_sphere.center){
-                isInShadow = true;
-            }
-        }
-        if(isInShadow){
-            return  outCol / 2.0f;
-        }
-        return outCol;
-    } else {
-        return vec3(0, 0, 0);
-    }
-
-
-}
 
 vec3 trace1(ray primRay, int depth) {
 
@@ -321,7 +182,7 @@ vec3 trace1(ray primRay, int depth) {
                     ray nextRay;
                     nextRay.dir = normalize(reflect(primRay.dir,  normalize(nHit)));
                     nextRay.origin = pHit + 0.2f*normalize(nHit);
-                    addCol = trace2(nextRay,depth + 1);
+//                    addCol = trace1(nextRay,depth + 1);
                 }
 
         shadowRay.origin = pHit + 0.2f*normalize(nHit);
@@ -363,67 +224,57 @@ vec3 trace1(ray primRay, int depth) {
 
 }
 
-vec3 trace(ray primRay, int depth) {
-
-    vec3 addCols[MAX_OBJNUM];
+vec3 trace() {
+    vec3 addCols[MAX_DEPTH + 1];
+    ray primRay = castRay(pixPos.x,pixPos.y);
     ray currentRay = primRay;
 
+    int depth = 0;
+
+    for(depth = 0; depth <= MAX_DEPTH; depth++){
+        sphere small_sphere;
+        float t_near = FLT_MAX;
+        bool hit = isIntersectingSphere(currentRay,small_sphere,t_near);
 
 
-    sphere small_sphere;
-    bool hit = false;
-    float t_near = FLT_MAX;
+        if(hit){
+            ray shadowRay;
 
-    for(int i = 0; i < OBJNUM; i++){
-        sphere o = objects[i];
-        float t0 = FLT_MAX;
-        float t1 = FLT_MAX;
+            vec3 pHit = currentRay.origin + currentRay.dir * t_near;
+            vec3 nHit = pHit - small_sphere.center;
 
-        if(intersect(o,currentRay,t0,t1)){
-            if(t0 < 0) {
-                t0 = t1;
+            vec3 addCol;
+
+
+            shadowRay.origin = pHit + 0.2f*normalize(nHit);
+            shadowRay.dir = normalize(lite.pos - pHit);
+            bool isInShadow = traceToLightSource(shadowRay, small_sphere);
+            vec3 outCol = calculatePointPHONG(shadowRay, nHit, pHit, small_sphere.color);
+
+            if(isInShadow){
+               addCols[depth] = outCol / 2.0 ;
+            } else {
+                addCols[depth] =  outCol;
             }
-            if(t0 < t_near){
-                t_near = t0;
-                small_sphere = o;
-                hit = true;
-            }
+
+            ray reflectRay;
+            reflectRay.dir = normalize(reflect(currentRay.dir,  normalize(nHit)));
+            reflectRay.origin = pHit + 0.2f*normalize(nHit);
+            currentRay = reflectRay;
+
+        } else {
+            addCols[depth] =  vec3(0.0, 0, 0.0);
+            break;
         }
+
     }
 
-
-    if(hit){
-        ray shadowRay;
-
-        vec3 pHit = primRay.origin + primRay.dir * t_near;
-        vec3 nHit = pHit - small_sphere.center;
-
-        vec3 addCol;
-
-//
-//
-        if(depth != MAX_DEPTH){
-            ray nextRay;
-            nextRay.dir = normalize(reflect(primRay.dir,  normalize(nHit)));
-            nextRay.origin = pHit + 0.2f*normalize(nHit);
-            addCol = trace1(nextRay,depth + 1);
-        }
-
-//
-//
-        shadowRay.origin = pHit + 0.2f*normalize(nHit);
-        shadowRay.dir = normalize(lite.pos - pHit);
-        bool isInShadow = traceToLightSource(shadowRay, small_sphere);
-        vec3 outCol = calculatePointPHONG(depth, shadowRay, nHit, pHit, small_sphere.color, addCol);
-
-        if(isInShadow){
-            return  outCol / 2.0f;
-        }
-            return outCol;
-    } else {
-        return vec3(0, 0, 0);
+    vec3 outCol = vec3(0,0,0);
+    for(int i = 0; i <= depth; i++){
+        outCol = (1 - pow(0.5,i)) * outCol + addCols[i] * pow(0.5,i);
     }
-//}
+
+    return outCol;
 
 }
 
@@ -435,8 +286,8 @@ void main() {
     }
     lite.pos = vec3(0,20,-30);
     lite.color = vec3(1,1,1);
-    ray primRay = castRay(pixPos.x,pixPos.y);
-    vec3 col = trace(primRay,0);
+
+    vec3 col = trace();
 //    FragColor = vec4(width/1920,width/1920,width/1920,1.0);
 //    FragColor = vec4(primRay.dir.x,primRay.dir.y,width/1920,1.0);
 //    col = sphColor[3];
