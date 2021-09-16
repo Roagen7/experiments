@@ -35,7 +35,7 @@ void ray::gl_main() {
     objects.emplace_back(vec3(0.0,0.0,-40), 4.0, vec3(1.0,0.32,0.36));
     objects.emplace_back(vec3(5.0,     -2.0, -30), 2.0, vec3(0.90, 0.76, 0.46));
 //    objects.emplace_back(vec3(3.0,     5.0, -30), 2.0, vec3(0.90, 0.76, 0.46));
-    objects.emplace_back(vec3(-5.5,0,-15.0),2, vec3(0.9, 0.9, 0.9));
+    objects.emplace_back(vec3(-5.5,0,-15.0),10.0, vec3(0.9, 0.9, 0.9));
 
 
 
