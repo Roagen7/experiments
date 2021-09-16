@@ -25,7 +25,7 @@ namespace camera {
     void init(int w, int h, glm::vec3 p, glm::vec3 d);
     void input(GLFWwindow* window);
 
-    glm::mat4 view();
+    glm::mat4 view(float zFar = 100.0f);
 
 }
 

@@ -5,7 +5,7 @@
 
 #define M_PI 3.1415926538
 #define FLT_MAX 3.402823466e+38
-#define MAX_DEPTH 10
+#define MAX_DEPTH 4
 
 
 

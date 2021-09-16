@@ -25,12 +25,12 @@ void camera::init(int w, int h, glm::vec3 p, glm::vec3 d) {
 
 }
 
-glm::mat4 camera::view(){
+glm::mat4 camera::view(float zFar){
     auto vx = glm::mat4(1.0f);
     auto proj = glm::mat4(1.0f);
 
     vx = glm::lookAt(camera::pos, camera::pos + camera::dir, camera::UP);
-    proj = glm::perspective(glm::radians(90.0f), (float) camera::camW/ camera::camH, 0.1f, 100.0f);
+    proj = glm::perspective(glm::radians(90.0f), (float) camera::camW/ camera::camH, 0.1f, zFar);
 
     return proj * vx;
 }
