@@ -40,6 +40,41 @@ void rgbToTex(arr3 rgb, stbi_uc*& output){
     }
 }
 
+arr3 toGray(arr3 rgb){
+    int widthImg = rgb.size();
+    int heightImg = rgb[0].size();
+    arr3 gray(widthImg, std::vector<glm::vec3>(heightImg,{0,0,0}));
+    for(int x = 0; x < widthImg; x++){
+        for(int y = 0; y < heightImg; y++){
+            gray[x][y] = {rgb[x][y].x,rgb[x][y].x, rgb[x][y].x };
+
+        }
+    }
+    return gray;
+
+}
+
+arr3 toRgb(arr3 ycc){
+    int widthImg = ycc.size();
+    int heightImg = ycc[0].size();
+    arr3 rgb(widthImg, std::vector<glm::vec3>(heightImg,{0,0,0}));
+    auto crtmat = glm::mat3();
+    crtmat[0][0] = 0.299; crtmat[0][1] = 0.587; crtmat[0][2] = 0.144;
+    crtmat[1][0] = -0.169; crtmat[1][1] = -0.331; crtmat[1][2] = 0.5;
+    crtmat[2][0] = 0.5; crtmat[2][1] = -0.419; crtmat[2][2] = -0.081;
+
+    crtmat = glm::inverse(crtmat);
+    for(int x = 0; x < widthImg; x++){
+        for(int y = 0; y < heightImg; y++){
+
+            rgb[x][y] =  crtmat *  (ycc[x][y] - glm::vec3(0, 128, 128));
+
+        }
+    }
+    return rgb;
+}
+
+
 arr3 toYCbCr(arr3 rgb){
     int widthImg = rgb.size();
     int heightImg = rgb[0].size();
@@ -64,13 +99,12 @@ arr3 toYCbCr(arr3 rgb){
             ycc[x][y] =glm::vec3(0,128,128) +  crtmat *   rgb[x][y];
 //            ycc[x][y] =  crtmat *   rgb[x][y];
 
+
         }
     }
 
 
     return ycc;
-
-
 }
 
 arr3 extractColor(stbi_uc* input, int widthImg, int heightImg, int numColCh){
@@ -100,7 +134,9 @@ void jpegCompress(const char *image, GLuint& TEX){
 //
 //
     auto mat = extractColor(bytes, widthImg, heightImg, numColCh);
+//    mat = toGray(mat);
     mat = toYCbCr(mat);
+    mat = toRgb(mat);
 //    rgbToTex(mat,bits);
 
 
