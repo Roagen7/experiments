@@ -60,7 +60,13 @@ vec3 Raycaster::trace(ray3 primRay, std::vector<sphere> objects, int depth) {
             vec3 pHit = primRay.origin + primRay.dir * t_near;
             vec3 nHit = pHit - small_sphere.center;
 
-            vec3 addCol;
+            vec3 addCol0, addCol1;
+            bool inside = false;
+            if(glm::dot(primRay.dir,nHit) > 0){
+                nHit = -nHit;
+                inside = true;
+            }
+
 
 
 
@@ -69,7 +75,18 @@ vec3 Raycaster::trace(ray3 primRay, std::vector<sphere> objects, int depth) {
                 reflectRay.dir = glm::normalize(glm::reflect(primRay.dir, glm::normalize(nHit)));
                 reflectRay.origin = pHit + 0.2f * glm::normalize(nHit);
 
-                addCol = trace(reflectRay, objects, depth + 1);
+                addCol0 = trace(reflectRay, objects, depth + 1);
+
+//                float ior = 1.1;
+//                float eta = inside ? ior : (1 / ior);
+//                float cosi = -glm::dot(glm::normalize(nHit),primRay.dir);
+//                float k = 1 - eta*eta * (1 - cosi * cosi);
+//                ray3 refractRay;
+//                refractRay.dir = primRay.dir * eta + glm::normalize(nHit) * (float) (eta * cosi - sqrt(k));
+//                refractRay.dir = glm::normalize(refractRay.dir);
+//                refractRay.origin = pHit - glm::normalize(nHit) * 0.2f;
+//                addCol1 = trace(refractRay,objects, depth+1);
+
             }
 
 
@@ -87,7 +104,7 @@ vec3 Raycaster::trace(ray3 primRay, std::vector<sphere> objects, int depth) {
 
             float phong = diffuse + ambient + specular;
             if(depth != MAX_DEPTH){
-                outCol = ( 2.f * small_sphere.color + addCol) / 3.0f * phong;
+                outCol = (  2.f* small_sphere.color +  addCol0) / 3.f * phong;
             } else {
                 outCol = small_sphere.color * phong;
             }

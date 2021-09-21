@@ -13,8 +13,10 @@
 #include "main.h"
 #include "../../functions/functions.h"
 #include "../../abstr/glsl/Shader.h"
+#include "structs.h"
 #include "Raycaster.h"
 #include "../../functions/camera.h"
+#include "Visible.h"
 
 using glm::vec3;
 
@@ -32,13 +34,15 @@ void ray::gl_main() {
     std::vector<triangle> triangles;
     std::vector<sphere> objects;
 
+    Visible vis(sphere(vec3(0.0,-1004.0,-20.0),1000, vec3((0.20,0.20,0.20))));
+
 
     objects.emplace_back(vec3(0.0,-1004.0,-20.0),1000, vec3((0.20,0.20,0.20)));
     objects.emplace_back(vec3(0.0,0.0,-40), 4.0, vec3(1.0,0.32,0.36));
     objects.emplace_back(vec3(5.0,     -2.0, -30), 2.0, vec3(0.90, 0.76, 0.46));
-    objects.emplace_back(vec3(-5.5,0,-15.0),3.0, vec3(0.9, 0.9, 0.9));
-    objects.emplace_back(vec3(-10.0, 3.0, -10.0), 6.0, vec3(0.0,1.0,0.0));
-
+//    objects.emplace_back(vec3(10.5,-3.0,-20.0),1.0, vec3(0.9, 0.9, 0.9));
+//    objects.emplace_back(vec3(-10.0, 0.0, -20.0), 10.0, vec3(0.0,1.0,0.0));
+    objects.emplace_back(vec3( 5.0,      0, -25),     3, vec3(0.65, 0.77, 0.97), 1, 0.0);
 
     Raycaster rc(width, height, E, vec3(0,0.0,0));
 
@@ -96,14 +100,16 @@ void ray::gl_main() {
             sphCenter.push_back(o.center);
             sphRadius.push_back(o.radius);
             sphColor.push_back(o.color);
-            shader.Unif("OBJNUM",(int) objects.size());
 
-            shader.Unif("width",(float) width);
-            shader.Unif("height",(float) height);
-            shader.Unif("sphCenter",sphCenter);
-            shader.Unif("sphRadius",sphRadius);
-            shader.Unif("sphColor",sphColor);
         }
+        shader.Unif("OBJNUM",(int) objects.size());
+        shader.Unif("CURRENT_DEPTH",  3);
+        shader.Unif("width",(float) width);
+        shader.Unif("height",(float) height);
+        shader.Unif("sphCenter",sphCenter);
+        shader.Unif("sphRadius",sphRadius);
+        shader.Unif("sphColor",sphColor);
+
     } else {
         CPUshader.Unif("width", (float) width);
         CPUshader.Unif("height", (float) height);

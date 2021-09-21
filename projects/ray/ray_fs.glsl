@@ -5,12 +5,13 @@
 
 #define M_PI 3.1415926538
 #define FLT_MAX 3.402823466e+38
-#define MAX_DEPTH 4
+#define MAX_DEPTH 10
 
 
 
 
 uniform int OBJNUM;
+uniform int CURRENT_DEPTH;
 uniform vec3 sphCenter[MAX_OBJNUM];
 uniform float sphRadius[MAX_OBJNUM];
 uniform vec3 sphColor[MAX_OBJNUM];
@@ -233,7 +234,7 @@ vec3 trace() {
 
     int depth = 0;
 
-    for(depth = 0; depth <= MAX_DEPTH; depth++){
+    for(depth = 0; depth <= CURRENT_DEPTH; depth++){
         sphere small_sphere;
         float t_near = FLT_MAX;
         bool hit = isIntersectingSphere(currentRay,small_sphere,t_near);

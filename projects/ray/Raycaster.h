@@ -14,7 +14,7 @@ using glm::vec3;
 
 class Raycaster {
 private:
-    const int MAX_DEPTH = 3;
+    const int MAX_DEPTH = 2;
     int width;
     int height;
     vec3 E;
