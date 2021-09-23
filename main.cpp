@@ -4,10 +4,11 @@
 #include "projects/mandelbulb/main.h"
 #include "projects/ray/main.h"
 #include "projects/jpeg/main.h"
+#include "projects/rubiks/main.h"
 
 
 int main() {
 
-    jpeg::gl_main();
+    rubiks::gl_main();
     return 0;
 }

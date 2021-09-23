@@ -11,8 +11,9 @@
 #include "../../abstr/databuffer/VBO.h"
 #include "../../functions/functions.h"
 
-#include "../../include/stb/stb_image.h"
 
+#include "../../include/stb/stb_image.h"
+#include <CL/cl.hpp>
 const int width = 1920;
 const int height = 1080;
 
@@ -136,7 +137,7 @@ void jpegCompress(const char *image, GLuint& TEX){
     auto mat = extractColor(bytes, widthImg, heightImg, numColCh);
 //    mat = toGray(mat);
     mat = toYCbCr(mat);
-    mat = toRgb(mat);
+//    mat = toRgb(mat);
 //    rgbToTex(mat,bits);
 
 

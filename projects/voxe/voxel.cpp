@@ -27,7 +27,7 @@ void voxel::draw(glm::mat4 cameraView, bool externalShader, GLuint shaderProgram
 
     glUniform3f(glGetUniformLocation(shaderProgram,"color"),color.x, color.y, color.z);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0 , cube.size());
+    glDrawArrays(GL_TRIANGLES, 0 , cube.size()/6.0f);
 
 
 }
@@ -51,9 +51,9 @@ glm::vec3 voxel::locate(DIR offset) {
     return {0.0,0.0,0.0};
 }
 
-voxel::~voxel() {
-    glDeleteVertexArrays(1,&VAO);
-}
+//voxel::~voxel() {
+//    glDeleteVertexArrays(1,&VAO);
+//}
 
 void voxel::calcModelMatrix() {
     auto mx  = glm::mat4(1.0f);

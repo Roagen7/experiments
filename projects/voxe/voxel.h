@@ -48,7 +48,7 @@ struct voxel {
 
 
     voxel(glm::vec3 pos, glm::vec3 color, float sideLength = 1);
-    ~voxel();
+//    ~voxel();
     void calcModelMatrix();
     void draw(glm::mat4 cameraView, bool externalShader = false, GLuint shaderProgram = 0);
 
