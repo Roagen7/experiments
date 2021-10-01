@@ -6,6 +6,10 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include "Raycaster.h"
 
+#ifndef M_PI
+#define M_PI 3.1415
+#endif
+
 Raycaster::Raycaster(int width, int height, vec3 E, vec3 rot): width(width), height(height), E(E), rot(rot) {
     this->invWidth = 1.0 / float(width);
     this->invHeight = 1.0 / float(height);

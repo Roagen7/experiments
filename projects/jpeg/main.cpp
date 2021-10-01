@@ -11,9 +11,11 @@
 #include "../../abstr/databuffer/VBO.h"
 #include "../../functions/functions.h"
 
+//#include "../../include/stb/stb_image.h"
 
-#include "../../include/stb/stb_image.h"
-#include <CL/cl.hpp>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 const int width = 1920;
 const int height = 1080;
 

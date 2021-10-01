@@ -2,12 +2,15 @@ cmake_minimum_required(VERSION 3.20)
 project(untitled5)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
 
-find_package(glfw3 3.3 REQUIRED)
-find_package(OpenCL REQUIRED)
+#uncomment on loonix
+#set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
+
+#find_package(glfw3 3.3 REQUIRED)
+#find_package(OpenCL REQUIRED)
 
 
+add_subdirectory(include/glfw-3.3.4/) #comment out on loonix
 add_subdirectory(include/glad/)
 add_subdirectory(include/glm/)
 add_subdirectory(include/stb/)
@@ -19,4 +22,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE stb)
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenCL::OpenCL)
+#target_link_libraries(${PROJECT_NAME} PRIVATE OpenCL::OpenCL)
