@@ -5,10 +5,11 @@
 #include "projects/ray/main.h"
 #include "projects/jpeg/main.h"
 #include "projects/rubiks/main.h"
+#include "projects/soft/main.h"
 
 
 int main() {
 
-    rubiks::gl_main();
+    soft::gl_main();
     return 0;
 }

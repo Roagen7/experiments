@@ -3,3 +3,6 @@
 /include/
 .idea
 /src/
+.vs
+CMakeSettings.json
+/out/
